@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btn_sina"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="分享到微博" />
+
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btn_qq"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="分享到QQ" />
+
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btn_qzone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="分享到Qzone" />
+
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btn_weixin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="分享到微信好友" />
+
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btn_weixin_circle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="分享到微信朋友圈" />
+
+
+    <com.canyinghao.canshare.demo.ShareView
+        android:id="@+id/shareView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
+
+</LinearLayout>
