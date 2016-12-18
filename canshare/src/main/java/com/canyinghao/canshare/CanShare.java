@@ -41,7 +41,7 @@ public class CanShare {
 
     private ShareListener shareListener;
 
-    private int shareType;
+    private int shareType = -1;
 
 
     private OauthSina oauthSina;
@@ -103,6 +103,8 @@ public class CanShare {
     }
 
     public void setShareListener(ShareListener shareListener) {
+
+        reset();
         this.shareListener = shareListener;
     }
 
@@ -225,7 +227,7 @@ public class CanShare {
         }
 
         if (shareType == ShareType.QQ || shareType == ShareType.QZONE) {
-            Tencent.onActivityResultData(requestCode, resultCode, data, iUiListener);
+            Tencent.onActivityResultData(requestCode, resultCode, data, null);
         }
 
 
@@ -239,31 +241,10 @@ public class CanShare {
     }
 
 
-    public final IUiListener iUiListener = new IUiListener() {
-        @Override
-        public void onCancel() {
+    public void reset() {
+        this.shareType = -1;
+        this.oauthSina = null;
+        this.shareSina = null;
 
-
-            if (shareListener != null) {
-                shareListener.onCancel();
-            }
-        }
-
-        @Override
-        public void onComplete(Object response) {
-
-            if (shareListener != null) {
-                shareListener.onComplete(ShareType.QZONE, null);
-            }
-        }
-
-        @Override
-        public void onError(UiError e) {
-
-            if (shareListener != null) {
-                shareListener.onError();
-            }
-
-        }
-    };
+    }
 }
