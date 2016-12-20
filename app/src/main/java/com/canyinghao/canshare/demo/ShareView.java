@@ -12,9 +12,11 @@ import com.canyinghao.canshare.annotation.ShareType;
 import com.canyinghao.canshare.constants.ShareConstants;
 import com.canyinghao.canshare.listener.ShareListener;
 import com.canyinghao.canshare.model.ShareContent;
+import com.sina.weibo.sdk.api.share.BaseResponse;
+import com.sina.weibo.sdk.api.share.IWeiboHandler;
 
 /**
- * Created by jianyang on 2016/12/15.
+ * Created by canyinghao on 2016/12/15.
  */
 
 public class ShareView extends View {
@@ -104,8 +106,8 @@ public class ShareView extends View {
     }
 
 
-    public void onNewIntent(Intent intent) {
-        CanShare.getInstance().onNewIntent(intent);
+    public void onNewIntent(Intent intent, IWeiboHandler.Response response) {
+        CanShare.getInstance().onNewIntent(intent, response);
 
     }
 
@@ -115,7 +117,11 @@ public class ShareView extends View {
 
     }
 
-    ShareContent shareContent;
+    public void onResponse(BaseResponse baseResponse) {
+        CanShare.getInstance().onResponse(baseResponse);
+    }
+
+    private ShareContent shareContent;
 
 
     public void setShareContent(ShareContent shareContent) {
@@ -127,9 +133,9 @@ public class ShareView extends View {
         if (shareContent == null) {
 
             shareContent = new ShareContent();
-            shareContent.setContent("看尽天下漫画");
-            shareContent.setTitle("知音漫客");
-            shareContent.setURL("http://www.zymk.com");
+            shareContent.setContent("分享天下事");
+            shareContent.setTitle("知不知");
+            shareContent.setURL("http://www.zzzz.com");
             shareContent.setImageUrl("http://ww3.sinaimg.cn/large/7a8aed7bjw1ezbriom623j20hs0qoadv.jpg");
             //分析PIC或者WEBPAGE请添加图片，直接添加bitmap
             shareContent.setShareImageBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));

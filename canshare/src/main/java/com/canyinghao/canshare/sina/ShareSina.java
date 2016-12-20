@@ -30,16 +30,15 @@ import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.sina.weibo.sdk.auth.WeiboAuthListener;
 import com.sina.weibo.sdk.constant.WBConstants;
 import com.sina.weibo.sdk.exception.WeiboException;
-import com.sina.weibo.sdk.utils.LogUtil;
 import com.sina.weibo.sdk.utils.Utility;
-import com.socks.library.KLog;
+
 import com.tencent.mm.sdk.modelbase.BaseResp;
 
 /**
  * 新浪分享
  */
 
-public class ShareSina implements IWeiboHandler.Response {
+public class ShareSina {
 
 
     public static final String SCOPE =
@@ -202,14 +201,12 @@ public class ShareSina implements IWeiboHandler.Response {
             token = accessToken.getToken();
         }
 
-        KLog.e(token);
 
         mSinaAPI.sendRequest((Activity) context, request, authInfo, token, new WeiboAuthListener() {
 
             @Override
             public void onWeiboException(WeiboException arg0) {
 
-                KLog.e("onWeiboException");
 
                 if (shareListener != null) {
                     shareListener.onError();
@@ -219,7 +216,7 @@ public class ShareSina implements IWeiboHandler.Response {
             @Override
             public void onComplete(Bundle bundle) {
 
-                KLog.e("onComplete");
+
 
 
                 Oauth2AccessToken newToken = Oauth2AccessToken.parseAccessToken(bundle);
@@ -232,7 +229,7 @@ public class ShareSina implements IWeiboHandler.Response {
 
             @Override
             public void onCancel() {
-                KLog.e("onCancel");
+
                 if (shareListener != null) {
                     shareListener.onCancel();
                 }
@@ -243,16 +240,13 @@ public class ShareSina implements IWeiboHandler.Response {
     }
 
 
-    public void onNewIntent(Intent intent) {
+    public void onNewIntent(Intent intent, IWeiboHandler.Response response) {
 
-        if (mSinaAPI != null) {
-
-            mSinaAPI.handleWeiboResponse(intent, this);
-        }
+        handleWeiboResponse(intent, response);
 
         String appPackage = intent.getStringExtra("_weibo_appPackage");
 
-        KLog.e(appPackage);
+
         if (TextUtils.isEmpty(appPackage)) {
 
             if (shareListener != null) {
@@ -285,6 +279,14 @@ public class ShareSina implements IWeiboHandler.Response {
         }
     }
 
+    public void handleWeiboResponse(Intent intent, IWeiboHandler.Response response) {
+        if (mSinaAPI != null && response != null) {
+
+            mSinaAPI.handleWeiboResponse(intent, response);
+
+        }
+    }
+
     public ShareSina share(ShareContent shareContent) {
 
         if (mSinaAPI != null) {
@@ -309,10 +311,8 @@ public class ShareSina implements IWeiboHandler.Response {
 
     }
 
-    @Override
-    public void onResponse(BaseResponse baseResponse) {
 
-        KLog.e("onResponse");
+    public void onResponse(BaseResponse baseResponse) {
 
         switch (baseResponse.errCode) {
 

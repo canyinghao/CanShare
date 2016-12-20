@@ -8,7 +8,6 @@ import android.util.Log;
 import com.canyinghao.canshare.annotation.ShareType;
 import com.canyinghao.canshare.listener.ShareListener;
 import com.canyinghao.canshare.model.ShareContent;
-import com.socks.library.KLog;
 import com.tencent.connect.share.QQShare;
 import com.tencent.connect.share.QzoneShare;
 import com.tencent.tauth.IUiListener;

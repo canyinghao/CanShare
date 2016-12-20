@@ -18,7 +18,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
- * Created by jianyang on 2016/12/17.
+ * Created by canyinghao on 2016/12/17.
  */
 
 public class LoginActivity extends AppCompatActivity {
@@ -97,11 +97,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        shareView.onNewIntent(intent);
-    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

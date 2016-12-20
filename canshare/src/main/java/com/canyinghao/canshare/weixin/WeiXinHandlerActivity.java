@@ -14,9 +14,7 @@ import com.canyinghao.canshare.R;
 import com.canyinghao.canshare.annotation.ShareType;
 import com.canyinghao.canshare.constants.ShareConstants;
 import com.canyinghao.canshare.listener.ShareListener;
-
 import com.canyinghao.canshare.model.OauthInfo;
-import com.socks.library.KLog;
 import com.tencent.mm.sdk.modelbase.BaseReq;
 import com.tencent.mm.sdk.modelbase.BaseResp;
 import com.tencent.mm.sdk.modelmsg.SendAuth;
@@ -105,7 +103,7 @@ public class WeiXinHandlerActivity extends Activity implements IWXAPIEventHandle
                                 @Override
                                 public void onResponse(Object result) {
                                     super.onResponse(result);
-                                    KLog.e("Canyinghao", "onResponse");
+
 
                                     JSONObject jsonObject = null;
                                     try {

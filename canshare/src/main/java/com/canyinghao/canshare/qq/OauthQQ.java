@@ -9,7 +9,6 @@ import com.canyinghao.canshare.annotation.ShareType;
 import com.canyinghao.canshare.constants.ShareConstants;
 import com.canyinghao.canshare.listener.ShareListener;
 import com.canyinghao.canshare.model.OauthInfo;
-import com.socks.library.KLog;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.common.Constants;
 import com.tencent.tauth.IUiListener;
@@ -58,7 +57,6 @@ public class OauthQQ {
 
     private void initOpenidAndToken(JSONObject jsonObject) {
 
-        KLog.e(jsonObject);
         try {
             String token = jsonObject.getString(Constants.PARAM_ACCESS_TOKEN);
 

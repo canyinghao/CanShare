@@ -17,15 +17,8 @@
         </activity>
 
 
-        <activity android:name=".ShareActivity">
-            <!-- 调用新浪原生SDK，需要注册的回调activity -->
-            <intent-filter>
-                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
+        <activity android:name=".ShareActivity"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-
-        </activity>
 
 
         <activity android:name=".LoginActivity" />

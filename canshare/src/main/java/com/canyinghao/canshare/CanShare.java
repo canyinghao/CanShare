@@ -12,14 +12,16 @@ import com.canyinghao.canshare.sina.OauthSina;
 import com.canyinghao.canshare.sina.ShareSina;
 import com.canyinghao.canshare.weixin.OauthWeiXin;
 import com.canyinghao.canshare.weixin.ShareWeiXin;
+import com.sina.weibo.sdk.api.share.BaseResponse;
+import com.sina.weibo.sdk.api.share.IWeiboHandler;
 import com.sina.weibo.sdk.auth.sso.SsoHandler;
-import com.socks.library.KLog;
+
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
 
 /**
- * Created by jianyang on 2016/12/14.
+ * Created by canyinghao on 2016/12/14.
  */
 
 public class CanShare {
@@ -47,6 +49,7 @@ public class CanShare {
     private OauthSina oauthSina;
 
     private ShareSina shareSina;
+
 
     public String getWeiXinAppId() {
         return weiXinAppId;
@@ -233,10 +236,19 @@ public class CanShare {
 
     }
 
-    public void onNewIntent(Intent intent) {
+    public void onNewIntent(Intent intent, IWeiboHandler.Response response) {
 
         if (shareSina != null) {
-            shareSina.onNewIntent(intent);
+            shareSina.onNewIntent(intent, response);
+        }
+    }
+
+
+
+    public void onResponse(BaseResponse baseResponse) {
+
+        if (shareSina != null) {
+            shareSina.onResponse(baseResponse);
         }
     }
 
