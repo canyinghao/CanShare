@@ -36,7 +36,7 @@ public class WeiXinHandlerActivity extends Activity implements IWXAPIEventHandle
 
     private ShareListener mShareListener;
 
-    private static final String API_URL = "https://api.weixin.qq.com";
+
 
     /**
      * BaseResp的getType函数获得的返回值，1:第三方授权， 2:分享
@@ -88,63 +88,19 @@ public class WeiXinHandlerActivity extends Activity implements IWXAPIEventHandle
 
                     final String code = ((SendAuth.Resp) resp).code;
 
+                    boolean isCode = CanShare.getInstance().isWinXinCode();
+
+                    if (isCode) {
+
+                        if (mShareListener != null) {
+                            mShareListener.onWeiXinLogin(code);
+                        }
+
+                    } else {
+                        getWeiXinToken(code);
+                    }
 
 
-
-                    CanOkHttp.getInstance().add("appid", CanShare.getInstance().getWeiXinAppId())
-                            .add("secret", CanShare.getInstance().getWeiXinSecret())
-                            .add("code", code)
-                            .add("grant_type", "authorization_code")
-                            .url(API_URL + "/sns/oauth2/access_token")
-                            .setCacheType(CacheType.NETWORK)
-                            .post()
-                            .setCallBack(new CanSimpleCallBack() {
-
-                                @Override
-                                public void onResponse(Object result) {
-                                    super.onResponse(result);
-
-
-                                    JSONObject jsonObject = null;
-                                    try {
-                                        jsonObject = new JSONObject(result.toString());
-
-                                        final String accessToken = jsonObject
-                                                .getString("access_token");
-                                        final String openId = jsonObject.getString("openid");
-                                        final String refreshToken = jsonObject.getString("refresh_token");
-                                        final String unionid = jsonObject.getString("unionid");
-
-                                        if (oauthInfo != null) {
-                                            oauthInfo.accesstoken = accessToken;
-                                            oauthInfo.openid = openId;
-                                            oauthInfo.unionid = unionid;
-                                            oauthInfo.refreshtoken = refreshToken;
-                                        }
-
-
-                                        getWeiXinUserInfo(accessToken, openId);
-
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                        if (mShareListener != null) {
-                                            mShareListener.onError();
-                                        }
-
-                                    }
-
-
-                                }
-
-                                @Override
-                                public void onFailure(int type, int code, String e) {
-                                    super.onFailure(type, code, e);
-
-                                    if (mShareListener != null) {
-                                        mShareListener.onError();
-                                    }
-                                }
-                            });
                 } else {
 
 
@@ -180,6 +136,73 @@ public class WeiXinHandlerActivity extends Activity implements IWXAPIEventHandle
         finish();
     }
 
+    public void getWeiXinToken(String code) {
+        CanOkHttp.getInstance().add("appid", CanShare.getInstance().getWeiXinAppId())
+                .add("secret", CanShare.getInstance().getWeiXinSecret())
+                .add("code", code)
+                .add("grant_type", "authorization_code")
+                .url(WeiXinUtils.API_URL + "/sns/oauth2/access_token")
+                .setCacheType(CacheType.NETWORK)
+                .post()
+                .setCallBack(new CanSimpleCallBack() {
+
+                    @Override
+                    public void onResponse(Object result) {
+                        super.onResponse(result);
+
+
+                        JSONObject jsonObject = null;
+                        try {
+                            jsonObject = new JSONObject(result.toString());
+
+                            final String accessToken = jsonObject
+                                    .getString("access_token");
+                            final String openId = jsonObject.getString("openid");
+                            final String refreshToken = jsonObject.getString("refresh_token");
+                            final String unionid = jsonObject.getString("unionid");
+
+                            if (oauthInfo != null) {
+                                oauthInfo.accesstoken = accessToken;
+                                oauthInfo.openid = openId;
+                                oauthInfo.unionid = unionid;
+                                oauthInfo.refreshtoken = refreshToken;
+                            }
+
+                            boolean isNeed = CanShare.getInstance().isNeedUserInfo();
+
+                            if (isNeed) {
+                                getWeiXinUserInfo(accessToken, openId);
+                            } else {
+                                if (mShareListener != null) {
+                                    mShareListener
+                                            .onComplete(ShareType.WEIXIN,
+                                                    oauthInfo);
+                                }
+
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            if (mShareListener != null) {
+                                mShareListener.onError();
+                            }
+
+                        }
+
+
+                    }
+
+                    @Override
+                    public void onFailure(int type, int code, String e) {
+                        super.onFailure(type, code, e);
+
+                        if (mShareListener != null) {
+                            mShareListener.onError();
+                        }
+                    }
+                });
+    }
+
 
     private void getWeiXinUserInfo(String accessToken, String openid) {
 
@@ -187,7 +210,7 @@ public class WeiXinHandlerActivity extends Activity implements IWXAPIEventHandle
         CanOkHttp.getInstance().add("access_token", accessToken)
                 .add("openid", openid)
                 .setCacheType(CacheType.NETWORK)
-                .url(API_URL + "/sns/userinfo")
+                .url(WeiXinUtils.API_URL + "/sns/userinfo")
                 .post()
                 .setCallBack(new CanSimpleCallBack() {
 

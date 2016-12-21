@@ -5,6 +5,7 @@ import android.content.Context;
 import android.text.TextUtils;
 
 
+import com.canyinghao.canshare.CanShare;
 import com.canyinghao.canshare.annotation.ShareType;
 import com.canyinghao.canshare.constants.ShareConstants;
 import com.canyinghao.canshare.listener.ShareListener;
@@ -93,62 +94,24 @@ public class OauthQQ {
                     JSONObject jsonObject = (JSONObject) object;
 
                     initOpenidAndToken(jsonObject);
-                    UserInfo info = new UserInfo(mContext, mTencent.getQQToken());
-                    info.getUserInfo(new IUiListener() {
-                        @Override
-                        public void onComplete(Object object) {
 
 
-                            try {
-                                JSONObject jsonObject = (JSONObject) object;
+                    boolean isNeed = CanShare.getInstance().isNeedUserInfo();
 
 
-                                oauthInfo.nickname = jsonObject.getString("nickname");
+                    if (isNeed) {
+                        getUserInfo();
 
-                                oauthInfo.headimgurl = jsonObject.getString("figureurl_qq_2");
+                    } else {
 
-                                oauthInfo.sex = jsonObject.getString("gender");
-
-
-                                if (shareListener != null) {
-
-
-                                    shareListener
-                                            .onComplete(ShareType.QQ, oauthInfo);
-                                }
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                                if (shareListener != null) {
-                                    shareListener
-                                            .onError();
-                                }
-                            }
-
-
+                        if (shareListener != null) {
+                            shareListener
+                                    .onComplete(ShareType.QQ, oauthInfo);
                         }
 
-
-                        @Override
-                        public void onError(UiError uiError) {
+                    }
 
 
-                            if (shareListener != null) {
-                                shareListener
-                                        .onError();
-                            }
-                        }
-
-                        @Override
-                        public void onCancel() {
-
-
-                            if (shareListener != null) {
-                                shareListener
-                                        .onCancel();
-                            }
-                        }
-                    });
                 }
 
                 @Override
@@ -175,5 +138,64 @@ public class OauthQQ {
         } else {
             mTencent.logout(mContext);
         }
+    }
+
+    private void getUserInfo() {
+        UserInfo info = new UserInfo(mContext, mTencent.getQQToken());
+        info.getUserInfo(new IUiListener() {
+            @Override
+            public void onComplete(Object object) {
+
+
+                try {
+                    JSONObject jsonObject = (JSONObject) object;
+
+
+                    oauthInfo.nickname = jsonObject.getString("nickname");
+
+                    oauthInfo.headimgurl = jsonObject.getString("figureurl_qq_2");
+
+                    oauthInfo.sex = jsonObject.getString("gender");
+
+
+                    if (shareListener != null) {
+
+
+                        shareListener
+                                .onComplete(ShareType.QQ, oauthInfo);
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    if (shareListener != null) {
+                        shareListener
+                                .onError();
+                    }
+                }
+
+
+            }
+
+
+            @Override
+            public void onError(UiError uiError) {
+
+
+                if (shareListener != null) {
+                    shareListener
+                            .onError();
+                }
+            }
+
+            @Override
+            public void onCancel() {
+
+
+                if (shareListener != null) {
+                    shareListener
+                            .onCancel();
+                }
+            }
+        });
     }
 }

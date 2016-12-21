@@ -29,4 +29,9 @@ public interface ShareListener {
     void onCancel();
 
 
+
+
+    void onWeiXinLogin(String code);
+
+
 }

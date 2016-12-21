@@ -99,8 +99,18 @@ public class OauthSina {
 
                 oauthInfo.unionid = accessToken.getUid();
 
+                boolean isNeed = CanShare.getInstance().isNeedUserInfo();
 
-                userAPI.show(Long.parseLong(accessToken.getUid()), mListener);
+                if (isNeed) {
+
+                    userAPI.show(Long.parseLong(accessToken.getUid()), mListener);
+
+                } else {
+                    if (mShareListener != null) {
+                        mShareListener.onComplete(ShareType.SINA, oauthInfo);
+                    }
+                }
+
             } else {
 
                 if (mShareListener != null) {

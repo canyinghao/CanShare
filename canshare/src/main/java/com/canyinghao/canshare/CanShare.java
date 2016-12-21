@@ -41,6 +41,12 @@ public class CanShare {
     private String noInstallWeiXin;
 
 
+    //   是否需要获取用户呢称等信息
+    private boolean isNeedUserInfo;
+
+    //    微信登录时直接返回code
+    private boolean isWinXinCode;
+
     private ShareListener shareListener;
 
     private int shareType = -1;
@@ -100,6 +106,21 @@ public class CanShare {
         this.noInstallWeiXin = noInstallWeiXin;
     }
 
+    public boolean isNeedUserInfo() {
+        return isNeedUserInfo;
+    }
+
+    public void setNeedUserInfo(boolean needUserInfo) {
+        isNeedUserInfo = needUserInfo;
+    }
+
+    public boolean isWinXinCode() {
+        return isWinXinCode;
+    }
+
+    public void setWinXinCode(boolean winXinCode) {
+        isWinXinCode = winXinCode;
+    }
 
     public ShareListener getShareListener() {
         return shareListener;
@@ -242,7 +263,6 @@ public class CanShare {
             shareSina.onNewIntent(intent, response);
         }
     }
-
 
 
     public void onResponse(BaseResponse baseResponse) {
