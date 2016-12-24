@@ -28,10 +28,15 @@ public interface ShareListener {
      */
     void onCancel();
 
-
-
-
+    /**
+     * 取得微信code
+     */
     void onWeiXinLogin(String code);
+
+    /**
+     * 微信未安装时回调
+     */
+    void onWeiXinNoInstall(String hint);
 
 
 }

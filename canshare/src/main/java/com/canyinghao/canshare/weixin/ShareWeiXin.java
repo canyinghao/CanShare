@@ -78,7 +78,12 @@ public class ShareWeiXin {
                 hint = context.getString(R.string.share_install_wechat_tips);
             }
 
-            Toast.makeText(context.getApplicationContext(), hint, Toast.LENGTH_SHORT).show();
+            ShareListener shareListener = CanShare.getInstance().getShareListener();
+
+            if (shareListener != null) {
+                shareListener.onWeiXinNoInstall(hint);
+            }
+
         } else {
             mIWXAPI.registerApp(mWeChatAppId);
         }
