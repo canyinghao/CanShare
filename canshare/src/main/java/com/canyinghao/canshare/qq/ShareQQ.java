@@ -3,11 +3,16 @@ package com.canyinghao.canshare.qq;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 
+import com.canyinghao.canshare.CanShare;
+import com.canyinghao.canshare.R;
 import com.canyinghao.canshare.annotation.ShareType;
 import com.canyinghao.canshare.listener.ShareListener;
 import com.canyinghao.canshare.model.ShareContent;
+import com.canyinghao.canshare.utils.ShareUtil;
+import com.socks.library.Util;
 import com.tencent.connect.share.QQShare;
 import com.tencent.connect.share.QzoneShare;
 import com.tencent.tauth.IUiListener;
@@ -112,6 +117,16 @@ public class ShareQQ {
 
     public ShareQQ share(ShareContent shareContent) {
 
+
+        if (!ShareUtil.isQQClientAvailable(context)) {
+
+            if (shareListener != null) {
+
+                shareListener.onQQNoInstall(context.getString(R.string.share_install_qq_tips));
+            }
+
+            return this;
+        }
 
         if (isShareToQQ) {
 

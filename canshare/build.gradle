@@ -6,10 +6,9 @@ android {
 
     defaultConfig {
         minSdkVersion 11
-        targetSdkVersion 24
+        targetSdkVersion 22
         versionCode 1
         versionName "1.0"
-
 
 
     }
@@ -25,7 +24,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     compile 'com.android.support:appcompat-v7:24.2.1'
-    compile 'com.canyinghao:canokhttp:1.2.6'
+    compile 'com.canyinghao:canokhttp:1.2.7'
 
 }
 

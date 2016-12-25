@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.canyinghao.canshare.annotation.ShareType;
+import com.canyinghao.canshare.listener.CanShareListener;
 import com.canyinghao.canshare.listener.ShareListener;
 import com.canyinghao.canshare.model.OauthInfo;
 import com.socks.library.KLog;
@@ -41,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
 
-        shareView.setShareListener(new ShareListener() {
+        shareView.setShareListener(new CanShareListener() {
             @Override
             public void onComplete(@ShareType int shareType, OauthInfo oauthInfo) {
 

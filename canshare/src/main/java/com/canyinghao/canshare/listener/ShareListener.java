@@ -38,5 +38,10 @@ public interface ShareListener {
      */
     void onWeiXinNoInstall(String hint);
 
+    /**
+     * QQ未安装时回调
+     */
+    void onQQNoInstall(String hint);
+
 
 }
