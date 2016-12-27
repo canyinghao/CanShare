@@ -137,8 +137,22 @@ public class OauthQQ {
 
         } else {
             mTencent.logout(mContext);
+            if (shareListener != null) {
+                shareListener
+                        .onError();
+            }
         }
     }
+
+    public void logout() {
+
+        if (mTencent != null) {
+            mTencent.logout(mContext);
+        }
+
+
+    }
+
 
     private void getUserInfo() {
         UserInfo info = new UserInfo(mContext, mTencent.getQQToken());

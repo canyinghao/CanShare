@@ -56,6 +56,8 @@ public class CanShare {
 
     private ShareSina shareSina;
 
+    private OauthQQ oauthQQ;
+
 
     public String getWeiXinAppId() {
         return weiXinAppId;
@@ -212,8 +214,9 @@ public class CanShare {
 
             case ShareType.QQ:
 
-                new OauthQQ(context, qqAppId).login(shareListener);
+                oauthQQ = new OauthQQ(context, qqAppId);
 
+                oauthQQ.login(shareListener);
 
                 break;
 
@@ -256,6 +259,17 @@ public class CanShare {
 
 
     }
+
+
+    public void logout() {
+
+        if (oauthQQ != null) {
+            oauthQQ.logout();
+            oauthQQ = null;
+        }
+
+    }
+
 
     public void onNewIntent(Intent intent, IWeiboHandler.Response response) {
 
