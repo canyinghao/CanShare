@@ -3,16 +3,12 @@ package com.canyinghao.canshare.qq;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
 
-import com.canyinghao.canshare.CanShare;
 import com.canyinghao.canshare.R;
 import com.canyinghao.canshare.annotation.ShareType;
 import com.canyinghao.canshare.listener.ShareListener;
 import com.canyinghao.canshare.model.ShareContent;
 import com.canyinghao.canshare.utils.ShareUtil;
-import com.socks.library.Util;
 import com.tencent.connect.share.QQShare;
 import com.tencent.connect.share.QzoneShare;
 import com.tencent.tauth.IUiListener;
@@ -46,16 +42,16 @@ public class ShareQQ {
 
         this.shareListener = shareListener;
 
-
-        mTencent = Tencent.createInstance(appId, context);
+        try {
+            mTencent = Tencent.createInstance(appId, context);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
 
 
     }
 
 
-    public Tencent getTencent() {
-        return mTencent;
-    }
 
     private void sharePageQzone(Activity activity, ShareContent shareContent) {
 
@@ -102,6 +98,11 @@ public class ShareQQ {
 
         if (mTencent != null) {
             mTencent.shareToQQ(activity, params, iUiListener);
+        }else{
+            if (shareListener != null) {
+                shareListener
+                        .onError();
+            }
         }
     }
 
@@ -110,6 +111,11 @@ public class ShareQQ {
 
         if (mTencent != null) {
             mTencent.shareToQzone(activity, params, iUiListener);
+        }else{
+            if (shareListener != null) {
+                shareListener
+                        .onError();
+            }
         }
 
     }

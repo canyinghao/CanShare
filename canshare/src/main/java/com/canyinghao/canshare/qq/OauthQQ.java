@@ -4,10 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 
-
 import com.canyinghao.canshare.CanShare;
 import com.canyinghao.canshare.annotation.ShareType;
-import com.canyinghao.canshare.constants.ShareConstants;
 import com.canyinghao.canshare.listener.ShareListener;
 import com.canyinghao.canshare.model.OauthInfo;
 import com.tencent.connect.UserInfo;
@@ -16,11 +14,8 @@ import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
 
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.HashMap;
 
 /**
  * QQ登录
@@ -46,7 +41,7 @@ public class OauthQQ {
 
         try {
             mTencent = Tencent.createInstance(appId, context);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             e.printStackTrace();
         }
 
@@ -73,7 +68,7 @@ public class OauthQQ {
 
 
             }
-        } catch (Exception e) {
+        } catch (Throwable e) {
 
             e.printStackTrace();
         }
@@ -83,6 +78,13 @@ public class OauthQQ {
 
 
     public void login(ShareListener mShareListener) {
+        if (mTencent == null) {
+            if (shareListener != null) {
+                shareListener
+                        .onError();
+            }
+            return;
+        }
         if (!mTencent.isSessionValid()) {
 
 
@@ -136,6 +138,7 @@ public class OauthQQ {
             });
 
         } else {
+
             mTencent.logout(mContext);
             if (shareListener != null) {
                 shareListener
@@ -155,6 +158,13 @@ public class OauthQQ {
 
 
     private void getUserInfo() {
+        if (mTencent == null) {
+            if (shareListener != null) {
+                shareListener
+                        .onError();
+            }
+            return;
+        }
         UserInfo info = new UserInfo(mContext, mTencent.getQQToken());
         info.getUserInfo(new IUiListener() {
             @Override
