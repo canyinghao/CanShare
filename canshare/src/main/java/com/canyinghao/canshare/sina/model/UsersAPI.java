@@ -102,36 +102,28 @@ public class UsersAPI extends AbsOpenAPI {
      * -----------------------------------------------------------------------
      */
     
-    /**
-     * @see #show(long, RequestListener)
-     */
+
     public String showSync(long uid) {
         WeiboParameters params = new WeiboParameters(mAppKey);
         params.put("uid", uid);
         return requestSync(sAPIList.get(READ_USER), params, HTTPMETHOD_GET);
     }
 
-    /**
-     * @see #show(String, RequestListener)
-     */
+
     public String showSync(String screen_name) {
         WeiboParameters params = new WeiboParameters(mAppKey);
         params.put("screen_name", screen_name);
         return requestSync(sAPIList.get(READ_USER), params, HTTPMETHOD_GET);
     }
 
-    /**
-     * @see #domainShow(String, RequestListener)
-     */
+
     public String domainShowSync(String domain) {
         WeiboParameters params = new WeiboParameters(mAppKey);
         params.put("domain", domain);
         return requestSync(sAPIList.get(READ_USER_BY_DOMAIN), params, HTTPMETHOD_GET);
     }
 
-    /**
-     * @see #counts(long[], RequestListener)
-     */
+
     public String countsSync(long[] uids) {
         WeiboParameters params = buildCountsParams(uids);
         return requestSync(sAPIList.get(READ_USER_COUNT), params, HTTPMETHOD_GET);

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.TextUtils;
 
@@ -15,9 +14,7 @@ import com.canyinghao.canshare.listener.ShareListener;
 import com.canyinghao.canshare.model.ShareContent;
 import com.canyinghao.canshare.utils.ShareUtil;
 import com.sina.weibo.sdk.api.ImageObject;
-import com.sina.weibo.sdk.api.MusicObject;
 import com.sina.weibo.sdk.api.TextObject;
-import com.sina.weibo.sdk.api.WebpageObject;
 import com.sina.weibo.sdk.api.WeiboMultiMessage;
 import com.sina.weibo.sdk.api.share.BaseResponse;
 import com.sina.weibo.sdk.api.share.IWeiboHandler;
@@ -30,8 +27,6 @@ import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.sina.weibo.sdk.auth.WeiboAuthListener;
 import com.sina.weibo.sdk.constant.WBConstants;
 import com.sina.weibo.sdk.exception.WeiboException;
-import com.sina.weibo.sdk.utils.Utility;
-
 import com.tencent.mm.sdk.modelbase.BaseResp;
 
 /**
@@ -116,15 +111,15 @@ public class ShareSina {
     }
 
 
-    private void shareMusic(ShareContent shareContent) {
-        WeiboMultiMessage weiboMultiMessage = new WeiboMultiMessage();
-        weiboMultiMessage.mediaObject = getMusicObj(shareContent);
-        //初始化从第三方到微博的消息请求
-        SendMultiMessageToWeiboRequest request = new SendMultiMessageToWeiboRequest();
-        request.transaction = ShareUtil.buildTransaction("sinamusic");
-        request.multiMessage = weiboMultiMessage;
-        allInOneShare(mContext, request);
-    }
+//    private void shareMusic(ShareContent shareContent) {
+//        WeiboMultiMessage weiboMultiMessage = new WeiboMultiMessage();
+//        weiboMultiMessage.mediaObject = getMusicObj(shareContent);
+//        //初始化从第三方到微博的消息请求
+//        SendMultiMessageToWeiboRequest request = new SendMultiMessageToWeiboRequest();
+//        request.transaction = ShareUtil.buildTransaction("sinamusic");
+//        request.multiMessage = weiboMultiMessage;
+//        allInOneShare(mContext, request);
+//    }
 
 
     /**
@@ -154,19 +149,19 @@ public class ShareSina {
      *
      * @return 多媒体（网页）消息对象。
      */
-    private WebpageObject getWebpageObj(ShareContent shareContent) {
-        WebpageObject mediaObject = new WebpageObject();
-        mediaObject.identify = Utility.generateGUID();
-        mediaObject.title = shareContent.getTitle();
-        mediaObject.description = shareContent.getContent();
-
-        // 设置 Bitmap 类型的图片到视频对象里
-        Bitmap bmp = ShareUtil.extractThumbNail(shareContent.getImageUrl(), 150, 150, true);
-        mediaObject.setThumbImage(bmp);
-        mediaObject.actionUrl = shareContent.getURL();
-        mediaObject.defaultText = shareContent.getContent();
-        return mediaObject;
-    }
+//    private WebpageObject getWebpageObj(ShareContent shareContent) {
+//        WebpageObject mediaObject = new WebpageObject();
+//        mediaObject.identify = Utility.generateGUID();
+//        mediaObject.title = shareContent.getTitle();
+//        mediaObject.description = shareContent.getContent();
+//
+//        // 设置 Bitmap 类型的图片到视频对象里
+//        Bitmap bmp = ShareUtil.extractThumbNail(shareContent.getImageUrl(), 150, 150, true);
+//        mediaObject.setThumbImage(bmp);
+//        mediaObject.actionUrl = shareContent.getURL();
+//        mediaObject.defaultText = shareContent.getContent();
+//        return mediaObject;
+//    }
 
 
     /**
@@ -174,22 +169,22 @@ public class ShareSina {
      *
      * @return 多媒体（音乐）消息对象。
      */
-    private MusicObject getMusicObj(ShareContent shareContent) {
-        // 创建媒体消息
-        MusicObject musicObject = new MusicObject();
-        musicObject.identify = Utility.generateGUID();
-        musicObject.title = shareContent.getTitle();
-        musicObject.description = shareContent.getContent();
-
-        // 设置 Bitmap 类型的图片到视频对象里
-        musicObject.setThumbImage(shareContent.getShareImageBitmap());
-        musicObject.actionUrl = shareContent.getURL();
-        musicObject.dataUrl = REDIRECT_URL;
-        musicObject.dataHdUrl = REDIRECT_URL;
-        musicObject.duration = 10;
-        musicObject.defaultText = shareContent.getContent();
-        return musicObject;
-    }
+//    private MusicObject getMusicObj(ShareContent shareContent) {
+//        // 创建媒体消息
+//        MusicObject musicObject = new MusicObject();
+//        musicObject.identify = Utility.generateGUID();
+//        musicObject.title = shareContent.getTitle();
+//        musicObject.description = shareContent.getContent();
+//
+//        // 设置 Bitmap 类型的图片到视频对象里
+//        musicObject.setThumbImage(shareContent.getShareImageBitmap());
+//        musicObject.actionUrl = shareContent.getURL();
+//        musicObject.dataUrl = REDIRECT_URL;
+//        musicObject.dataHdUrl = REDIRECT_URL;
+//        musicObject.duration = 10;
+//        musicObject.defaultText = shareContent.getContent();
+//        return musicObject;
+//    }
 
 
     private void allInOneShare(final Context context, SendMultiMessageToWeiboRequest request) {
@@ -300,9 +295,6 @@ public class ShareSina {
                     break;
                 case ShareConstants.SHARE_WAY_WEBPAGE:
                     shareWebPage(shareContent);
-                    break;
-                case ShareConstants.SHARE_WAY_MUSIC:
-                    shareMusic(shareContent);
                     break;
             }
         }
