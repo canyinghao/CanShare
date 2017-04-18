@@ -16,6 +16,7 @@
         <activity
             android:name="com.tencent.tauth.AuthActivity"
             android:launchMode="singleTask"
+            android:configChanges="orientation|keyboard|keyboardHidden|screenSize"
             android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -29,8 +30,8 @@
 
         <activity
             android:name="com.tencent.connect.common.AssistActivity"
-            android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboard|keyboardHidden|screenSize"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
 
