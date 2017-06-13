@@ -4,8 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.annotation.IntDef;
 import android.text.TextUtils;
-import android.widget.Toast;
-
 
 import com.canyinghao.canshare.CanShare;
 import com.canyinghao.canshare.R;
@@ -120,7 +118,7 @@ public class ShareWeiXin {
         req.transaction = ShareUtil.buildTransaction("imgshareappdata");
         req.message = msg;
         req.scene = shareType;
-        sendShare(shareContent.getShareImageBitmap(), req);
+        sendShare(shareContent, req);
     }
 
 
@@ -135,7 +133,7 @@ public class ShareWeiXin {
         req.transaction = ShareUtil.buildTransaction("webpage");
         req.message = msg;
         req.scene = shareType;
-        sendShare(shareContent.getShareImageBitmap(), req);
+        sendShare(shareContent, req);
     }
 
 
@@ -153,7 +151,7 @@ public class ShareWeiXin {
         req.transaction = ShareUtil.buildTransaction("music");
         req.message = msg;
         req.scene = shareType;
-        sendShare(shareContent.getShareImageBitmap(), req);
+        sendShare(shareContent, req);
     }
 
 
@@ -173,11 +171,22 @@ public class ShareWeiXin {
         }
     }
 
-    private void sendShare(final Bitmap bitmap, final SendMessageToWX.Req req) {
+    private void sendShare(ShareContent shareContent, final SendMessageToWX.Req req) {
+
+        Bitmap bitmap = shareContent.getShareImageBitmap();
 
         if (bitmap != null) {
             if (req.message.mediaObject instanceof WXImageObject) {
-                req.message.mediaObject = new WXImageObject(bitmap);
+                WXImageObject imageObject=  null;
+
+                String imageUrl = shareContent.getImageUrl();
+                if(!TextUtils.isEmpty(imageUrl)&&imageUrl.startsWith("file://")){
+                    imageObject= new WXImageObject();
+                    imageObject.imagePath = imageUrl.replace("file://","");
+                }else{
+                    imageObject=  new WXImageObject(bitmap);
+                }
+                req.message.mediaObject =imageObject;
             }
             req.message.thumbData = ShareUtil.bmpToByteArray(BitmapUtil.scaleCenterCrop(bitmap, THUMB_SIZE, THUMB_SIZE));
         }

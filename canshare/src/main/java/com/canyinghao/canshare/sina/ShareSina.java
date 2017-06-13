@@ -3,7 +3,6 @@ package com.canyinghao.canshare.sina;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.TextUtils;
 
@@ -88,7 +87,7 @@ public class ShareSina {
     private void sharePicture(ShareContent shareContent) {
 
         WeiboMultiMessage weiboMultiMessage = new WeiboMultiMessage();
-        weiboMultiMessage.imageObject = getImageObj(shareContent.getShareImageBitmap());
+        weiboMultiMessage.imageObject = getImageObj(shareContent);
         //初始化从第三方到微博的消息请求
         SendMultiMessageToWeiboRequest request = new SendMultiMessageToWeiboRequest();
         request.transaction = ShareUtil.buildTransaction("sinapic");
@@ -100,7 +99,7 @@ public class ShareSina {
 
         WeiboMultiMessage weiboMultiMessage = new WeiboMultiMessage();
         weiboMultiMessage.textObject = getTextObj(shareContent.getContent());
-        weiboMultiMessage.imageObject = getImageObj(shareContent.getShareImageBitmap());
+        weiboMultiMessage.imageObject = getImageObj(shareContent);
         // 初始化从第三方到微博的消息请求
         SendMultiMessageToWeiboRequest request = new SendMultiMessageToWeiboRequest();
         // 用transaction唯一标识一个请求
@@ -138,9 +137,14 @@ public class ShareSina {
      *
      * @return 图片消息对象。
      */
-    private ImageObject getImageObj(Bitmap bitmap) {
+    private ImageObject getImageObj(ShareContent shareContent) {
         ImageObject imageObject = new ImageObject();
-        imageObject.setImageObject(bitmap);
+        String imageUrl = shareContent.getImageUrl();
+        if(!TextUtils.isEmpty(imageUrl)&&imageUrl.startsWith("file://")){
+            imageObject.imagePath = imageUrl.replace("file://","");
+        }else{
+            imageObject.setImageObject(shareContent.getShareImageBitmap());
+        }
         return imageObject;
     }
 

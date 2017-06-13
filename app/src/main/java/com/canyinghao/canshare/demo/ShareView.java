@@ -133,13 +133,14 @@ public class ShareView extends View {
         if (shareContent == null) {
 
             shareContent = new ShareContent();
+            shareContent.shareWay = ShareConstants.SHARE_WAY_PIC;
             shareContent.setContent("分享天下事");
             shareContent.setTitle("知不知");
             shareContent.setURL("http://www.zzzz.com");
-            shareContent.setImageUrl("http://ww3.sinaimg.cn/large/7a8aed7bjw1ezbriom623j20hs0qoadv.jpg");
+            shareContent.setImageUrl("file:///storage/emulated/0/Pictures/Screenshots/S70613-132347.jpg");
             //分析PIC或者WEBPAGE请添加图片，直接添加bitmap
             shareContent.setShareImageBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
-            shareContent.setShareWay(ShareConstants.SHARE_WAY_WEBPAGE);
+//            shareContent.setShareWay(ShareConstants.SHARE_WAY_WEBPAGE);
         }
 
 

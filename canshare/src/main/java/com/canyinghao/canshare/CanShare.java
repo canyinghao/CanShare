@@ -15,10 +15,7 @@ import com.canyinghao.canshare.weixin.ShareWeiXin;
 import com.sina.weibo.sdk.api.share.BaseResponse;
 import com.sina.weibo.sdk.api.share.IWeiboHandler;
 import com.sina.weibo.sdk.auth.sso.SsoHandler;
-
-import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
-import com.tencent.tauth.UiError;
 
 /**
  * Created by canyinghao on 2016/12/14.
@@ -213,6 +210,8 @@ public class CanShare {
         switch (shareType) {
 
             case ShareType.QQ:
+
+                logout();
 
                 oauthQQ = new OauthQQ(context, qqAppId);
 

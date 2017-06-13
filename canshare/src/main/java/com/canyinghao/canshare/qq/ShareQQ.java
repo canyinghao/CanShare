@@ -3,9 +3,11 @@ package com.canyinghao.canshare.qq;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.TextUtils;
 
 import com.canyinghao.canshare.R;
 import com.canyinghao.canshare.annotation.ShareType;
+import com.canyinghao.canshare.constants.ShareConstants;
 import com.canyinghao.canshare.listener.ShareListener;
 import com.canyinghao.canshare.model.ShareContent;
 import com.canyinghao.canshare.utils.ShareUtil;
@@ -52,17 +54,28 @@ public class ShareQQ {
     }
 
 
-
     private void sharePageQzone(Activity activity, ShareContent shareContent) {
 
         Bundle params = new Bundle();
+
+        if (shareContent.shareWay == ShareConstants.SHARE_WAY_PIC) {
+            params.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE,
+                    ShareConstants.SHARE_WAY_PIC);
+        } else {
+            params.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE,
+                    ShareConstants.SHARE_WAY_WEBPAGE);
+        }
+
         params.putString(QzoneShare.SHARE_TO_QQ_TITLE, shareContent.getTitle());
         params.putString(QzoneShare.SHARE_TO_QQ_SUMMARY, shareContent.getContent());
-        params.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE,
-                QzoneShare.SHARE_TO_QZONE_TYPE_IMAGE_TEXT);
         params.putString(QzoneShare.SHARE_TO_QQ_TARGET_URL, shareContent.getURL());
         ArrayList<String> imageUrls = new ArrayList<String>();
-        imageUrls.add(shareContent.getImageUrl());
+        String imageUrl = shareContent.getImageUrl();
+        if (!TextUtils.isEmpty(imageUrl) && imageUrl.startsWith("file://")) {
+            imageUrls.add(imageUrl.replace("file://", ""));
+        } else {
+            imageUrls.add(imageUrl);
+        }
         params.putStringArrayList(QzoneShare.SHARE_TO_QQ_IMAGE_URL, imageUrls);
         doShareToQzone(activity, params);
 
@@ -73,15 +86,26 @@ public class ShareQQ {
 
         Bundle params = new Bundle();
         //类型
-        params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
-        //标题
-        params.putString(QQShare.SHARE_TO_QQ_TITLE, shareContent.getTitle());
-        //内容的url
-        params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, shareContent.getURL());
-        //摘要
-        params.putString(QQShare.SHARE_TO_QQ_SUMMARY, shareContent.getContent());
+        if(shareContent.shareWay == ShareConstants.SHARE_WAY_PIC){
+            params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE,  QQShare.SHARE_TO_QQ_TYPE_IMAGE );
+
+        }else{
+            params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE,  QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
+            //标题
+            params.putString(QQShare.SHARE_TO_QQ_TITLE, shareContent.getTitle());
+            //内容的url
+            params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, shareContent.getURL());
+            //摘要
+            params.putString(QQShare.SHARE_TO_QQ_SUMMARY, shareContent.getContent());
+        }
         //图片url
-        params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, shareContent.getImageUrl());
+        String imageUrl = shareContent.getImageUrl();
+        if (!TextUtils.isEmpty(imageUrl) && imageUrl.startsWith("file://")) {
+            params.putString(QQShare.SHARE_TO_QQ_IMAGE_LOCAL_URL, imageUrl.replace("file://", ""));
+        } else {
+            params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, imageUrl);
+        }
+
 
         doShareToQQ(activity, params);
 
@@ -98,7 +122,7 @@ public class ShareQQ {
 
         if (mTencent != null) {
             mTencent.shareToQQ(activity, params, iUiListener);
-        }else{
+        } else {
             if (shareListener != null) {
                 shareListener
                         .onError();
@@ -111,7 +135,7 @@ public class ShareQQ {
 
         if (mTencent != null) {
             mTencent.shareToQzone(activity, params, iUiListener);
-        }else{
+        } else {
             if (shareListener != null) {
                 shareListener
                         .onError();
