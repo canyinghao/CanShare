@@ -3,12 +3,10 @@ package com.canyinghao.canshare.weixin;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.widget.Toast;
 
 import com.canyinghao.canshare.CanShare;
 import com.canyinghao.canshare.R;
 import com.canyinghao.canshare.listener.ShareListener;
-
 import com.tencent.mm.sdk.modelmsg.SendAuth;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
@@ -28,7 +26,7 @@ public class OauthWeiXin {
     public OauthWeiXin(Context context, String appId) {
 
         if (!TextUtils.isEmpty(appId)) {
-            mIWXAPI = WXAPIFactory.createWXAPI(context, appId, true);
+            mIWXAPI = WXAPIFactory.createWXAPI(context.getApplicationContext(), appId, true);
 
             WeiXinHandlerActivity.mIWXAPI = mIWXAPI;
 

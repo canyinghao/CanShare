@@ -36,18 +36,23 @@ public class ShareQQ {
 
     private Context context;
 
+    private Activity activity;
+
     public ShareQQ(Context context, String appId, boolean isShareToQQ, ShareListener shareListener) {
+
+        this.activity = (Activity) context;
+
+        this.context = context.getApplicationContext();
 
         this.isShareToQQ = isShareToQQ;
 
-        this.context = context;
+
 
         this.shareListener = shareListener;
 
         try {
-            mTencent = Tencent.createInstance(appId, context);
+            mTencent = Tencent.createInstance(appId, context.getApplicationContext());
         } catch (Throwable e) {
-            e.printStackTrace();
         }
 
 
@@ -160,10 +165,10 @@ public class ShareQQ {
 
         if (isShareToQQ) {
 
-            sharePageQQ((Activity) context, shareContent);
+            sharePageQQ(activity, shareContent);
         } else {
 
-            sharePageQzone((Activity) context, shareContent);
+            sharePageQzone(activity, shareContent);
         }
 
 

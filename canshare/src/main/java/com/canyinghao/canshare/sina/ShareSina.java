@@ -42,6 +42,7 @@ public class ShareSina {
 
     public String REDIRECT_URL = "http://sns.whalecloud.com/sina2/callback";
 
+    private Activity activity;
     private Context mContext;
 
     private String appId;
@@ -56,7 +57,8 @@ public class ShareSina {
 
 
     public ShareSina(Context context, String appId, ShareListener shareListener) {
-        mContext = context;
+        activity = (Activity) context;
+        mContext = context.getApplicationContext();
         this.appId = appId;
 
         REDIRECT_URL = CanShare.getInstance().getWeiBoRedirectUrl();
@@ -201,7 +203,7 @@ public class ShareSina {
         }
 
 
-        mSinaAPI.sendRequest((Activity) context, request, authInfo, token, new WeiboAuthListener() {
+        mSinaAPI.sendRequest(activity, request, authInfo, token, new WeiboAuthListener() {
 
             @Override
             public void onWeiboException(WeiboException arg0) {

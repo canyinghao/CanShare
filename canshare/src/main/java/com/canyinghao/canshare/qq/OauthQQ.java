@@ -26,6 +26,7 @@ public class OauthQQ {
 
     private Context mContext;
 
+    private Activity activity;
 
     private Tencent mTencent;
 
@@ -37,12 +38,12 @@ public class OauthQQ {
 
 
     public OauthQQ(Context context, String appId) {
-        mContext = context;
+        activity = (Activity) context;
+        mContext = context.getApplicationContext();
 
         try {
-            mTencent = Tencent.createInstance(appId, context);
+            mTencent = Tencent.createInstance(appId, this.mContext);
         } catch (Throwable e) {
-            e.printStackTrace();
         }
 
 
@@ -90,7 +91,7 @@ public class OauthQQ {
 
             this.shareListener = mShareListener;
 
-            mTencent.login((Activity) mContext, "all", new IUiListener() {
+            mTencent.login(activity, "all", new IUiListener() {
                 @Override
                 public void onComplete(Object object) {
                     JSONObject jsonObject = (JSONObject) object;

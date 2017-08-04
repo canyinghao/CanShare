@@ -5,10 +5,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
 
-
 import com.canyinghao.canshare.CanShare;
 import com.canyinghao.canshare.annotation.ShareType;
-import com.canyinghao.canshare.constants.ShareConstants;
 import com.canyinghao.canshare.listener.ShareListener;
 import com.canyinghao.canshare.model.OauthInfo;
 import com.canyinghao.canshare.sina.model.User;
@@ -19,8 +17,6 @@ import com.sina.weibo.sdk.auth.WeiboAuthListener;
 import com.sina.weibo.sdk.auth.sso.SsoHandler;
 import com.sina.weibo.sdk.exception.WeiboException;
 import com.sina.weibo.sdk.net.RequestListener;
-
-import java.util.HashMap;
 
 /**
  * 新浪登录
@@ -34,6 +30,7 @@ public class OauthSina {
             "friendships_groups_read,friendships_groups_write,statuses_to_me_read,"
                     + "follow_app_official_microblog";
 
+    private Activity activity;
     private Context mContext;
 
     private String mSinaAppKey;
@@ -51,8 +48,9 @@ public class OauthSina {
 
 
     public OauthSina(Context context, String appId) {
+        activity = (Activity) context;
+        mContext = context.getApplicationContext();
 
-        mContext = context;
         mSinaAppKey = appId;
 
         oauthInfo = new OauthInfo();
@@ -72,7 +70,7 @@ public class OauthSina {
         mShareListener = shareListener;
         AccessTokenKeeper.clear(mContext);
         AuthInfo mAuthInfo = new AuthInfo(mContext, mSinaAppKey, redirectUrl, SCOPE);
-        mSsoHandler = new SsoHandler((Activity) mContext, mAuthInfo);
+        mSsoHandler = new SsoHandler(activity, mAuthInfo);
         mSsoHandler.authorize(new AuthListener());
 
         return this;

@@ -64,7 +64,7 @@ public class ShareWeiXin {
 
 
     private void initWeixinShare(Context context) {
-        mIWXAPI = WXAPIFactory.createWXAPI(context, mWeChatAppId, true);
+        mIWXAPI = WXAPIFactory.createWXAPI(context.getApplicationContext(), mWeChatAppId, true);
 
         WeiXinHandlerActivity.mIWXAPI = mIWXAPI;
 
