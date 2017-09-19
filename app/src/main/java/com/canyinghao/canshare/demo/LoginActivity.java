@@ -10,7 +10,6 @@ import android.widget.Toast;
 
 import com.canyinghao.canshare.annotation.ShareType;
 import com.canyinghao.canshare.listener.CanShareListener;
-import com.canyinghao.canshare.listener.ShareListener;
 import com.canyinghao.canshare.model.OauthInfo;
 import com.socks.library.KLog;
 
@@ -62,6 +61,17 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onCancel() {
                 Toast.makeText(getApplicationContext(), "取消", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onQQNoInstall(String hint) {
+                super.onQQNoInstall(hint);
+                Toast.makeText(getApplicationContext(), hint, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onWeiXinNoInstall(String hint) {
+                super.onWeiXinNoInstall(hint);
             }
         });
 
