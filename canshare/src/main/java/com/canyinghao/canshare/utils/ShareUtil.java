@@ -141,12 +141,15 @@ public class ShareUtil {
         if (pinfo != null) {
             for (int i = 0; i < pinfo.size(); i++) {
                 String pn = pinfo.get(i).packageName;
-                if (pn.equals("com.tencent.mobileqq")) {
+                if (pn.equals("com.tencent.mobileqq")||pn.equals("com.tencent.tim")) {
                     return true;
                 }
             }
         }
         return false;
     }
+
+
+
 
 }
