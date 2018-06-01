@@ -115,15 +115,20 @@ public class ShareUtil {
 
 
     public static boolean isWeixinAvilible(Context context) {
-        final PackageManager packageManager = context.getPackageManager();// 获取packagemanager
-        List<PackageInfo> pinfo = packageManager.getInstalledPackages(0);// 获取所有已安装程序的包信息
-        if (pinfo != null) {
-            for (int i = 0; i < pinfo.size(); i++) {
-                String pn = pinfo.get(i).packageName;
-                if (pn.equals("com.tencent.mm")) {
-                    return true;
+
+        try{
+            final PackageManager packageManager = context.getPackageManager();// 获取packagemanager
+            List<PackageInfo> pinfo = packageManager.getInstalledPackages(0);// 获取所有已安装程序的包信息
+            if (pinfo != null) {
+                for (int i = 0; i < pinfo.size(); i++) {
+                    String pn = pinfo.get(i).packageName;
+                    if (pn.equals("com.tencent.mm")) {
+                        return true;
+                    }
                 }
             }
+        }catch (Throwable e){
+            e.printStackTrace();
         }
 
         return false;
@@ -136,16 +141,21 @@ public class ShareUtil {
      * @return boolean
      */
     public static boolean isQQClientAvailable(Context context) {
-        final PackageManager packageManager = context.getPackageManager();
-        List<PackageInfo> pinfo = packageManager.getInstalledPackages(0);
-        if (pinfo != null) {
-            for (int i = 0; i < pinfo.size(); i++) {
-                String pn = pinfo.get(i).packageName;
-                if (pn.equals("com.tencent.mobileqq")||pn.equals("com.tencent.tim")) {
-                    return true;
+        try{
+            final PackageManager packageManager = context.getPackageManager();
+            List<PackageInfo> pinfo = packageManager.getInstalledPackages(0);
+            if (pinfo != null) {
+                for (int i = 0; i < pinfo.size(); i++) {
+                    String pn = pinfo.get(i).packageName;
+                    if (pn.equals("com.tencent.mobileqq")||pn.equals("com.tencent.tim")) {
+                        return true;
+                    }
                 }
             }
+        }catch (Throwable e){
+            e.printStackTrace();
         }
+
         return false;
     }
 
