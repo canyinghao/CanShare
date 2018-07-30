@@ -54,8 +54,6 @@ public class CanShare {
 
     private ShareSina shareSina;
 
-    private OauthQQ oauthQQ;
-
 
     public String getWeiXinAppId() {
         return weiXinAppId;
@@ -223,9 +221,7 @@ public class CanShare {
                     return;
                 }
 
-                logout();
-
-                oauthQQ = new OauthQQ(context, qqAppId);
+                OauthQQ oauthQQ = new OauthQQ(context, qqAppId);
 
                 oauthQQ.login(shareListener);
 
@@ -264,20 +260,12 @@ public class CanShare {
             }
         }
 
+        oauthSina = null;
+
         if (shareType == ShareType.QQ || shareType == ShareType.QZONE) {
             Tencent.onActivityResultData(requestCode, resultCode, data, null);
         }
 
-
-    }
-
-
-    public void logout() {
-
-        if (oauthQQ != null) {
-            oauthQQ.logout();
-            oauthQQ = null;
-        }
 
     }
 
@@ -287,6 +275,7 @@ public class CanShare {
         if (shareSina != null) {
             shareSina.onNewIntent(intent, response);
         }
+        shareSina = null;
     }
 
 
@@ -304,4 +293,6 @@ public class CanShare {
         this.shareSina = null;
 
     }
+
+
 }

@@ -86,76 +86,64 @@ public class OauthQQ {
             }
             return;
         }
-        if (!mTencent.isSessionValid()) {
 
-
-            this.shareListener = mShareListener;
-
-            mTencent.login(activity, "all", new IUiListener() {
-                @Override
-                public void onComplete(Object object) {
-                    JSONObject jsonObject = (JSONObject) object;
-
-                    initOpenidAndToken(jsonObject);
-
-
-                    boolean isNeed = CanShare.getInstance().isNeedUserInfo();
-
-
-                    if (isNeed) {
-                        getUserInfo();
-
-                    } else {
-
-                        if (shareListener != null) {
-                            shareListener
-                                    .onComplete(ShareType.QQ, oauthInfo);
-                        }
-
-                    }
-
-
-                }
-
-                @Override
-                public void onError(UiError uiError) {
-
-
-                    if (shareListener != null) {
-                        shareListener
-                                .onError();
-                    }
-                }
-
-                @Override
-                public void onCancel() {
-
-
-                    if (shareListener != null) {
-                        shareListener
-                                .onCancel();
-                    }
-                }
-            });
-
-        } else {
-
+        if (mTencent.isSessionValid()) {
             mTencent.logout(mContext);
-            if (shareListener != null) {
-                shareListener
-                        .onError();
+        }
+
+
+        this.shareListener = mShareListener;
+
+        mTencent.login(activity, "all", new IUiListener() {
+            @Override
+            public void onComplete(Object object) {
+                JSONObject jsonObject = (JSONObject) object;
+
+                initOpenidAndToken(jsonObject);
+
+
+                boolean isNeed = CanShare.getInstance().isNeedUserInfo();
+
+
+                if (isNeed) {
+                    getUserInfo();
+
+                } else {
+
+                    if (shareListener != null) {
+                        shareListener
+                                .onComplete(ShareType.QQ, oauthInfo);
+                    }
+
+                }
+
+
             }
-        }
+
+            @Override
+            public void onError(UiError uiError) {
+
+
+                if (shareListener != null) {
+                    shareListener
+                            .onError();
+                }
+            }
+
+            @Override
+            public void onCancel() {
+
+
+                if (shareListener != null) {
+                    shareListener
+                            .onCancel();
+                }
+            }
+        });
+
+
     }
 
-    public void logout() {
-
-        if (mTencent != null) {
-            mTencent.logout(mContext);
-        }
-
-
-    }
 
 
     private void getUserInfo() {
