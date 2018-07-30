@@ -1,18 +1,14 @@
 package com.canyinghao.canshare.weixin;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import com.canyinghao.canokhttp.CanOkHttp;
 import com.canyinghao.canokhttp.annotation.CacheType;
 import com.canyinghao.canokhttp.callback.CanSimpleCallBack;
 import com.canyinghao.canshare.CanShare;
-import com.canyinghao.canshare.R;
 import com.canyinghao.canshare.annotation.ShareType;
-import com.canyinghao.canshare.constants.ShareConstants;
 import com.canyinghao.canshare.listener.ShareListener;
 import com.canyinghao.canshare.model.OauthInfo;
 import com.tencent.mm.sdk.modelbase.BaseReq;
@@ -24,8 +20,6 @@ import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-
 
 /**
  * 微信回调页面
@@ -35,7 +29,6 @@ public class WeiXinHandlerActivity extends Activity implements IWXAPIEventHandle
     public static IWXAPI mIWXAPI;
 
     private ShareListener mShareListener;
-
 
 
     /**
@@ -95,6 +88,7 @@ public class WeiXinHandlerActivity extends Activity implements IWXAPIEventHandle
                         if (mShareListener != null) {
                             mShareListener.onWeiXinLogin(code);
                         }
+                        reset();
 
                     } else {
                         getWeiXinToken(code);
@@ -109,6 +103,7 @@ public class WeiXinHandlerActivity extends Activity implements IWXAPIEventHandle
                                 .onComplete(ShareType.WEIXIN,
                                         null);
                     }
+                    reset();
                 }
 
 
@@ -120,7 +115,7 @@ public class WeiXinHandlerActivity extends Activity implements IWXAPIEventHandle
                     mShareListener
                             .onCancel();
                 }
-
+                reset();
 
                 break;
             case BaseResp.ErrCode.ERR_SENT_FAILED:
@@ -129,10 +124,11 @@ public class WeiXinHandlerActivity extends Activity implements IWXAPIEventHandle
                     mShareListener
                             .onError();
                 }
-
+                reset();
 
                 break;
         }
+
         finish();
     }
 
@@ -178,7 +174,7 @@ public class WeiXinHandlerActivity extends Activity implements IWXAPIEventHandle
                                             .onComplete(ShareType.WEIXIN,
                                                     oauthInfo);
                                 }
-
+                                reset();
                             }
 
                         } catch (JSONException e) {
@@ -186,6 +182,7 @@ public class WeiXinHandlerActivity extends Activity implements IWXAPIEventHandle
                             if (mShareListener != null) {
                                 mShareListener.onError();
                             }
+                            reset();
 
                         }
 
@@ -199,6 +196,7 @@ public class WeiXinHandlerActivity extends Activity implements IWXAPIEventHandle
                         if (mShareListener != null) {
                             mShareListener.onError();
                         }
+                        reset();
                     }
                 });
     }
@@ -253,7 +251,7 @@ public class WeiXinHandlerActivity extends Activity implements IWXAPIEventHandle
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
+                        reset();
 
                     }
 
@@ -264,7 +262,7 @@ public class WeiXinHandlerActivity extends Activity implements IWXAPIEventHandle
                         if (mShareListener != null) {
                             mShareListener.onError();
                         }
-
+                        reset();
 
                     }
                 });
@@ -272,4 +270,8 @@ public class WeiXinHandlerActivity extends Activity implements IWXAPIEventHandle
 
     }
 
+    private void reset() {
+        mIWXAPI = null;
+        mShareListener = null;
+    }
 }

@@ -8,7 +8,6 @@ import com.canyinghao.canshare.CanShare;
 import com.canyinghao.canshare.R;
 import com.canyinghao.canshare.listener.ShareListener;
 import com.tencent.mm.sdk.modelmsg.SendAuth;
-import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 /**
@@ -20,17 +19,17 @@ public class OauthWeiXin {
 
     private static final String STATE = "lls_engzo_wechat_login";
 
-    private IWXAPI mIWXAPI;
+
 
 
     public OauthWeiXin(Context context, String appId) {
 
         if (!TextUtils.isEmpty(appId)) {
-            mIWXAPI = WXAPIFactory.createWXAPI(context.getApplicationContext(), appId, true);
+            WeiXinHandlerActivity.mIWXAPI = WXAPIFactory.createWXAPI(context.getApplicationContext(), appId, true);
 
-            WeiXinHandlerActivity.mIWXAPI = mIWXAPI;
 
-            if (!mIWXAPI.isWXAppInstalled()) {
+
+            if (!WeiXinHandlerActivity.mIWXAPI.isWXAppInstalled()) {
 
                 String hint = CanShare.getInstance().getNoInstallWeiXin();
                 if (TextUtils.isEmpty(hint)) {
@@ -44,18 +43,18 @@ public class OauthWeiXin {
                 }
 
             } else {
-                mIWXAPI.registerApp(appId);
+                WeiXinHandlerActivity.mIWXAPI.registerApp(appId);
             }
         }
     }
 
 
     public void login(ShareListener listener) {
-        if (mIWXAPI != null) {
+        if (WeiXinHandlerActivity.mIWXAPI != null) {
             final SendAuth.Req req = new SendAuth.Req();
             req.scope = SCOPE;
             req.state = STATE;
-            mIWXAPI.sendReq(req);
+            WeiXinHandlerActivity.mIWXAPI.sendReq(req);
 
         }
     }

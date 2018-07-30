@@ -278,6 +278,8 @@ public class ShareSina {
                     break;
             }
         }
+
+        reset();
     }
 
     public void handleWeiboResponse(Intent intent, IWeiboHandler.Response response) {
@@ -339,5 +341,12 @@ public class ShareSina {
 
         }
 
+    }
+
+
+    private void reset() {
+        activity = null;
+        mContext = null;
+        shareListener = null;
     }
 }

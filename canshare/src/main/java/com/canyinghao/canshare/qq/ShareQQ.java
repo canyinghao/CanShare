@@ -34,7 +34,7 @@ public class ShareQQ {
 
     private ShareListener shareListener;
 
-    private Context context;
+    private Context mContext;
 
     private Activity activity;
 
@@ -42,7 +42,7 @@ public class ShareQQ {
 
         this.activity = (Activity) context;
 
-        this.context = context.getApplicationContext();
+        this.mContext = context.getApplicationContext();
 
         this.isShareToQQ = isShareToQQ;
 
@@ -153,11 +153,11 @@ public class ShareQQ {
     public ShareQQ share(ShareContent shareContent) {
 
 
-        if (!ShareUtil.isQQClientAvailable(context)) {
+        if (!ShareUtil.isQQClientAvailable(mContext)) {
 
             if (shareListener != null) {
 
-                shareListener.onQQNoInstall(context.getString(R.string.share_install_qq_tips));
+                shareListener.onQQNoInstall(mContext.getString(R.string.share_install_qq_tips));
             }
 
             return this;
@@ -185,6 +185,7 @@ public class ShareQQ {
             if (shareListener != null) {
                 shareListener.onCancel();
             }
+            reset();
         }
 
         @Override
@@ -193,6 +194,7 @@ public class ShareQQ {
             if (shareListener != null) {
                 shareListener.onComplete(isShareToQQ ? ShareType.QQ : ShareType.QZONE, null);
             }
+            reset();
         }
 
         @Override
@@ -202,9 +204,18 @@ public class ShareQQ {
             if (shareListener != null) {
                 shareListener.onError();
             }
+            reset();
 
         }
     };
+
+
+    private void reset() {
+        mTencent = null;
+        activity = null;
+        mContext = null;
+        shareListener = null;
+    }
 
 
 }

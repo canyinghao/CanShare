@@ -81,8 +81,7 @@ public class OauthQQ {
     public void login(ShareListener mShareListener) {
         if (mTencent == null) {
             if (shareListener != null) {
-                shareListener
-                        .onError();
+                shareListener.onError();
             }
             return;
         }
@@ -111,9 +110,10 @@ public class OauthQQ {
                 } else {
 
                     if (shareListener != null) {
-                        shareListener
-                                .onComplete(ShareType.QQ, oauthInfo);
+                        shareListener.onComplete(ShareType.QQ, oauthInfo);
                     }
+
+                    reset();
 
                 }
 
@@ -125,9 +125,9 @@ public class OauthQQ {
 
 
                 if (shareListener != null) {
-                    shareListener
-                            .onError();
+                    shareListener.onError();
                 }
+                reset();
             }
 
             @Override
@@ -135,9 +135,9 @@ public class OauthQQ {
 
 
                 if (shareListener != null) {
-                    shareListener
-                            .onCancel();
+                    shareListener.onCancel();
                 }
+                reset();
             }
         });
 
@@ -145,12 +145,10 @@ public class OauthQQ {
     }
 
 
-
     private void getUserInfo() {
         if (mTencent == null) {
             if (shareListener != null) {
-                shareListener
-                        .onError();
+                shareListener.onError();
             }
             return;
         }
@@ -174,19 +172,18 @@ public class OauthQQ {
                     if (shareListener != null) {
 
 
-                        shareListener
-                                .onComplete(ShareType.QQ, oauthInfo);
+                        shareListener.onComplete(ShareType.QQ, oauthInfo);
                     }
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                     if (shareListener != null) {
-                        shareListener
-                                .onError();
+                        shareListener.onError();
                     }
                 }
 
 
+                reset();
             }
 
 
@@ -195,9 +192,9 @@ public class OauthQQ {
 
 
                 if (shareListener != null) {
-                    shareListener
-                            .onError();
+                    shareListener.onError();
                 }
+                reset();
             }
 
             @Override
@@ -205,10 +202,18 @@ public class OauthQQ {
 
 
                 if (shareListener != null) {
-                    shareListener
-                            .onCancel();
+                    shareListener.onCancel();
                 }
+
+                reset();
             }
         });
+    }
+
+    private void reset() {
+        mTencent = null;
+        activity = null;
+        mContext = null;
+        shareListener = null;
     }
 }

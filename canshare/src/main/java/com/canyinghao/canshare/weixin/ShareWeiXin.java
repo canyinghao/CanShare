@@ -18,7 +18,6 @@ import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.sdk.modelmsg.WXMusicObject;
 import com.tencent.mm.sdk.modelmsg.WXTextObject;
 import com.tencent.mm.sdk.modelmsg.WXWebpageObject;
-import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 /**
@@ -47,7 +46,7 @@ public class ShareWeiXin {
     private static final int THUMB_SIZE = 116;
 
 
-    private IWXAPI mIWXAPI;
+
 
 
     private String mWeChatAppId;
@@ -64,11 +63,11 @@ public class ShareWeiXin {
 
 
     private void initWeixinShare(Context context) {
-        mIWXAPI = WXAPIFactory.createWXAPI(context.getApplicationContext(), mWeChatAppId, true);
+        WeiXinHandlerActivity.mIWXAPI = WXAPIFactory.createWXAPI(context.getApplicationContext(), mWeChatAppId, true);
 
-        WeiXinHandlerActivity.mIWXAPI = mIWXAPI;
 
-        if (!mIWXAPI.isWXAppInstalled()) {
+
+        if (!WeiXinHandlerActivity.mIWXAPI.isWXAppInstalled()) {
 
             String hint = CanShare.getInstance().getNoInstallWeiXin();
             if (TextUtils.isEmpty(hint)) {
@@ -83,7 +82,7 @@ public class ShareWeiXin {
             }
 
         } else {
-            mIWXAPI.registerApp(mWeChatAppId);
+            WeiXinHandlerActivity.mIWXAPI.registerApp(mWeChatAppId);
         }
     }
 
@@ -105,7 +104,7 @@ public class ShareWeiXin {
         req.message = msg;
         //发送的目标场景， 可以选择发送到会话 WXSceneSession 或者朋友圈 WXSceneTimeline。 默认发送到会话。
         req.scene = shareType;
-        mIWXAPI.sendReq(req);
+        WeiXinHandlerActivity.mIWXAPI.sendReq(req);
     }
 
 
@@ -191,7 +190,7 @@ public class ShareWeiXin {
             req.message.thumbData = ShareUtil.bmpToByteArray(BitmapUtil.scaleCenterCrop(bitmap, THUMB_SIZE, THUMB_SIZE));
         }
         // 就算图片没有了 尽量能发出分享
-        mIWXAPI.sendReq(req);
+        WeiXinHandlerActivity.mIWXAPI.sendReq(req);
     }
 
 

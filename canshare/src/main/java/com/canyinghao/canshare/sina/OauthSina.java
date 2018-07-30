@@ -107,6 +107,7 @@ public class OauthSina {
                     if (mShareListener != null) {
                         mShareListener.onComplete(ShareType.SINA, oauthInfo);
                     }
+                    reset();
                 }
 
             } else {
@@ -114,6 +115,7 @@ public class OauthSina {
                 if (mShareListener != null) {
                     mShareListener.onError();
                 }
+                reset();
             }
 
         }
@@ -123,6 +125,7 @@ public class OauthSina {
             if (mShareListener != null) {
                 mShareListener.onError();
             }
+            reset();
         }
 
         @Override
@@ -130,6 +133,7 @@ public class OauthSina {
             if (mShareListener != null) {
                 mShareListener.onCancel();
             }
+            reset();
         }
     }
 
@@ -161,6 +165,7 @@ public class OauthSina {
                 }
 
             }
+            reset();
         }
 
         @Override
@@ -168,8 +173,16 @@ public class OauthSina {
             if (mShareListener != null) {
                 mShareListener.onError();
             }
+            reset();
         }
     };
 
+
+    private void reset() {
+        activity = null;
+        mContext = null;
+        mSsoHandler =null;
+        mShareListener = null;
+    }
 
 }
