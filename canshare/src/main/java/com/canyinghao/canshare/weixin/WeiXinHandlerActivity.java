@@ -27,6 +27,7 @@ import org.json.JSONObject;
 public class WeiXinHandlerActivity extends Activity implements IWXAPIEventHandler {
 
     public static IWXAPI mIWXAPI;
+    public static boolean isWeixinCircle;
 
     private ShareListener mShareListener;
 
@@ -100,7 +101,7 @@ public class WeiXinHandlerActivity extends Activity implements IWXAPIEventHandle
 
                     if (mShareListener != null) {
                         mShareListener
-                                .onComplete(ShareType.WEIXIN,
+                                .onComplete(isWeixinCircle?ShareType.WEIXIN_CIRCLE:ShareType.WEIXIN,
                                         null);
                     }
                     reset();
@@ -273,5 +274,6 @@ public class WeiXinHandlerActivity extends Activity implements IWXAPIEventHandle
     private void reset() {
         mIWXAPI = null;
         mShareListener = null;
+        isWeixinCircle = false;
     }
 }

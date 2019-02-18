@@ -190,6 +190,7 @@ public class ShareWeiXin {
             req.message.thumbData = ShareUtil.bmpToByteArray(BitmapUtil.scaleCenterCrop(bitmap, THUMB_SIZE, THUMB_SIZE));
         }
         // 就算图片没有了 尽量能发出分享
+        WeiXinHandlerActivity.isWeixinCircle = req.scene==TIME_LINE;
         WeiXinHandlerActivity.mIWXAPI.sendReq(req);
     }
 
