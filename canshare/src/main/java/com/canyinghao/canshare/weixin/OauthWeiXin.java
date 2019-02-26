@@ -7,8 +7,8 @@ import android.text.TextUtils;
 import com.canyinghao.canshare.CanShare;
 import com.canyinghao.canshare.R;
 import com.canyinghao.canshare.listener.ShareListener;
-import com.tencent.mm.sdk.modelmsg.SendAuth;
-import com.tencent.mm.sdk.openapi.WXAPIFactory;
+import com.tencent.mm.opensdk.modelmsg.SendAuth;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
 /**
  * 微信登录

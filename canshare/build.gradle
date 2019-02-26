@@ -26,6 +26,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:28.0.0'
     compile 'com.canyinghao:canokhttp:2.3.2'
     compile 'com.sina.weibo.sdk:core:1.0.0:openDefaultRelease@aar'
+    compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:5.3.1'
 
 }
 

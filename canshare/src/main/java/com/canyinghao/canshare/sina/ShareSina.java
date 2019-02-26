@@ -26,7 +26,7 @@ import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.sina.weibo.sdk.auth.WeiboAuthListener;
 import com.sina.weibo.sdk.constant.WBConstants;
 import com.sina.weibo.sdk.exception.WeiboException;
-import com.tencent.mm.sdk.modelbase.BaseResp;
+import com.tencent.mm.opensdk.modelbase.BaseResp;
 
 /**
  * 新浪分享
