@@ -15,6 +15,7 @@ import com.canyinghao.canshare.utils.ShareUtil;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.opensdk.modelmsg.WXImageObject;
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
+import com.tencent.mm.opensdk.modelmsg.WXMiniProgramObject;
 import com.tencent.mm.opensdk.modelmsg.WXMusicObject;
 import com.tencent.mm.opensdk.modelmsg.WXTextObject;
 import com.tencent.mm.opensdk.modelmsg.WXWebpageObject;
@@ -154,6 +155,26 @@ public class ShareWeiXin {
     }
 
 
+    public void shareMini(int shareType, ShareContent shareContent){
+        WXMiniProgramObject miniProgramObj = new WXMiniProgramObject();
+        miniProgramObj.webpageUrl =shareContent.getURL(); // 兼容低版本的网页链接
+        miniProgramObj.miniprogramType = WXMiniProgramObject.MINIPTOGRAM_TYPE_RELEASE;// 正式版:0，测试版:1，体验版:2
+        miniProgramObj.userName = shareContent.getMiniProgramUserName();     // 小程序原始id
+        miniProgramObj.path = shareContent.getMiniProgramPath();            //小程序页面路径
+        WXMediaMessage msg = new WXMediaMessage(miniProgramObj);
+        msg.title = shareContent.getTitle();
+        msg.description = shareContent.getContent();
+
+        SendMessageToWX.Req req = new SendMessageToWX.Req();
+        req.transaction = ShareUtil.buildTransaction("webpage");
+        req.message = msg;
+        req.scene = shareType;
+        sendShare(shareContent, req);
+
+
+    }
+
+
     public void share(ShareContent content, @WeiChatShareType int shareType) {
         switch (content.getShareWay()) {
             case ShareConstants.SHARE_WAY_TEXT:
@@ -167,6 +188,10 @@ public class ShareWeiXin {
                 break;
             case ShareConstants.SHARE_WAY_MUSIC:
                 shareMusic(shareType, content);
+                break;
+            case ShareConstants.SHARE_WAY_MINI:
+                shareMini(shareType, content);
+                break;
         }
     }
 

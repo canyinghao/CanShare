@@ -26,4 +26,10 @@ public class ShareConstants {
     public static final int SHARE_WAY_MUSIC = 4;
 
 
+    /**
+     * mini Program
+     */
+    public static final int SHARE_WAY_MINI = 5;
+
+
 }

@@ -19,4 +19,5 @@ public @interface ShareType {
     int WEIXIN_CIRCLE = 3;
     int SINA = 4;
 
+
 }

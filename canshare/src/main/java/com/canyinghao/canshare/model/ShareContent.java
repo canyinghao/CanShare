@@ -23,6 +23,9 @@ public class ShareContent {
 
     public Bitmap mShareImageBitmap;
 
+    public String miniProgramUserName;
+    public String miniProgramPath;
+
     public int shareWay  = ShareConstants.SHARE_WAY_WEBPAGE;
 
 
@@ -98,5 +101,21 @@ public class ShareContent {
 
     public void setShareWay(int shareWay) {
         this.shareWay = shareWay;
+    }
+
+    public String getMiniProgramPath() {
+        return miniProgramPath;
+    }
+
+    public void setMiniProgramPath(String miniProgramPath) {
+        this.miniProgramPath = miniProgramPath;
+    }
+
+    public String getMiniProgramUserName() {
+        return miniProgramUserName;
+    }
+
+    public void setMiniProgramUserName(String miniProgramUserName) {
+        this.miniProgramUserName = miniProgramUserName;
     }
 }
