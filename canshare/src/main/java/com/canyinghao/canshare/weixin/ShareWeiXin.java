@@ -10,7 +10,6 @@ import com.canyinghao.canshare.R;
 import com.canyinghao.canshare.constants.ShareConstants;
 import com.canyinghao.canshare.listener.ShareListener;
 import com.canyinghao.canshare.model.ShareContent;
-import com.canyinghao.canshare.utils.BitmapUtil;
 import com.canyinghao.canshare.utils.ShareUtil;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.opensdk.modelmsg.WXImageObject;
@@ -43,15 +42,15 @@ public class ShareWeiXin {
     }
 
 
-    // 缩略图大小 = 116 微信里头xdpi就是以这个尺寸展示的, 并且这个尺寸平衡了大小与32k缩略图的限制
-    private static final int THUMB_SIZE = 116;
-
-
-    public static int THUMB_MINI_SIZE  = 116*3;
-
-    public static void setThumbMiniSize(int thumbMiniSize) {
-        THUMB_MINI_SIZE = thumbMiniSize;
-    }
+//    // 缩略图大小 = 116 微信里头xdpi就是以这个尺寸展示的, 并且这个尺寸平衡了大小与32k缩略图的限制
+//    private static final int THUMB_SIZE = 116;
+//
+//
+//    public static int THUMB_MINI_SIZE  = 116*3;
+//
+//    public static void setThumbMiniSize(int thumbMiniSize) {
+//        THUMB_MINI_SIZE = thumbMiniSize;
+//    }
 
     private String mWeChatAppId;
 
@@ -215,10 +214,16 @@ public class ShareWeiXin {
                 }
                 req.message.mediaObject =imageObject;
             }
-            if(shareContent.getShareWay()==ShareConstants.SHARE_WAY_MINI){
-                req.message.thumbData = ShareUtil.bmpToByteArray(BitmapUtil.scaleCenterCrop(bitmap, THUMB_MINI_SIZE, THUMB_MINI_SIZE));
+//            if(shareContent.getShareWay()==ShareConstants.SHARE_WAY_MINI){
+//                req.message.thumbData = ShareUtil.bmpToByteArray(BitmapUtil.scaleCenterCrop(bitmap, THUMB_MINI_SIZE, THUMB_MINI_SIZE));
+//            }else{
+//                req.message.thumbData = ShareUtil.bmpToByteArray(BitmapUtil.scaleCenterCrop(bitmap, THUMB_SIZE, THUMB_SIZE));
+//            }
+//
+           if(shareContent.getShareWay()==ShareConstants.SHARE_WAY_MINI){
+                req.message.thumbData = ShareUtil.getCompressBitmap(bitmap,128);
             }else{
-                req.message.thumbData = ShareUtil.bmpToByteArray(BitmapUtil.scaleCenterCrop(bitmap, THUMB_SIZE, THUMB_SIZE));
+                req.message.thumbData = ShareUtil.getCompressBitmap(bitmap,32);
             }
 
         }
