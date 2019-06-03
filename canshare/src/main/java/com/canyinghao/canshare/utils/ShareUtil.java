@@ -43,15 +43,22 @@ public class ShareUtil {
      * @return
      */
     public static byte[] getCompressBitmap(Bitmap image, int minSize) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        int options = 100;
-        while (baos.toByteArray().length / 1024 > minSize && options > 0) {
-            options -= 5;
-            baos.reset();
-            image.compress(Bitmap.CompressFormat.JPEG, options, baos);
+        try{
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            int options = 100;
+            while (baos.toByteArray().length / 1024 > minSize && options > 0) {
+                options -= 5;
+                baos.reset();
+                image.compress(Bitmap.CompressFormat.JPEG, options, baos);
+            }
+            return baos.toByteArray();
+        }catch (Throwable e){
+            e.printStackTrace();
         }
-        return baos.toByteArray();
+
+        return null;
+
 
     }
 
