@@ -10,6 +10,7 @@ import com.canyinghao.canshare.R;
 import com.canyinghao.canshare.constants.ShareConstants;
 import com.canyinghao.canshare.listener.ShareListener;
 import com.canyinghao.canshare.model.ShareContent;
+import com.canyinghao.canshare.utils.BitmapUtil;
 import com.canyinghao.canshare.utils.ShareUtil;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.opensdk.modelmsg.WXImageObject;
@@ -221,7 +222,9 @@ public class ShareWeiXin {
 //            }
 //
            if(shareContent.getShareWay()==ShareConstants.SHARE_WAY_MINI){
+                bitmap =  BitmapUtil.scaleCenterCrop(bitmap);
                 req.message.thumbData = ShareUtil.getCompressBitmap(bitmap,128);
+
             }else{
                 req.message.thumbData = ShareUtil.getCompressBitmap(bitmap,32);
             }
