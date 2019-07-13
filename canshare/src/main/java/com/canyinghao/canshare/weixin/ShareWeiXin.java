@@ -12,6 +12,7 @@ import com.canyinghao.canshare.listener.ShareListener;
 import com.canyinghao.canshare.model.ShareContent;
 import com.canyinghao.canshare.utils.BitmapUtil;
 import com.canyinghao.canshare.utils.ShareUtil;
+import com.tencent.mm.opensdk.modelbiz.WXLaunchMiniProgram;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.opensdk.modelmsg.WXImageObject;
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
@@ -174,6 +175,16 @@ public class ShareWeiXin {
         req.scene = shareType;
         sendShare(shareContent, req);
 
+
+    }
+
+    public void openWxMini(ShareContent shareContent){
+
+        WXLaunchMiniProgram.Req req = new WXLaunchMiniProgram.Req();
+        req.userName = shareContent.miniProgramUserName; // 填小程序原始id
+        req.path = shareContent.miniProgramPath;                  //拉起小程序页面的可带参路径，不填默认拉起小程序首页
+        req.miniprogramType = WXLaunchMiniProgram.Req.MINIPTOGRAM_TYPE_RELEASE;// 可选打开 开发版，体验版和正式版
+        WeiXinHandlerActivity.mIWXAPI.sendReq(req);
 
     }
 

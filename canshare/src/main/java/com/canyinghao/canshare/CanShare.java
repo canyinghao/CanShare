@@ -195,9 +195,13 @@ public class CanShare {
                 shareSina = new ShareSina(context, weiBoAppId, shareListener).share(shareContent);
 
                 break;
+            case ShareType.WEIXIN_MINI:
+
+                new ShareWeiXin(context, weiXinAppId).openWxMini(shareContent);
+
+                break;
 
         }
-
 
     }
 

@@ -11,8 +11,10 @@ import com.canyinghao.canshare.CanShare;
 import com.canyinghao.canshare.annotation.ShareType;
 import com.canyinghao.canshare.listener.ShareListener;
 import com.canyinghao.canshare.model.OauthInfo;
+import com.tencent.mm.opensdk.constants.ConstantsAPI;
 import com.tencent.mm.opensdk.modelbase.BaseReq;
 import com.tencent.mm.opensdk.modelbase.BaseResp;
+import com.tencent.mm.opensdk.modelbiz.WXLaunchMiniProgram;
 import com.tencent.mm.opensdk.modelmsg.SendAuth;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
@@ -73,62 +75,79 @@ public class WeiXinHandlerActivity extends Activity implements IWXAPIEventHandle
         mShareListener = CanShare.getInstance().getShareListener();
 
 
-        switch (resp.errCode) {
-            case BaseResp.ErrCode.ERR_OK:
+        if (resp.getType() == ConstantsAPI.COMMAND_LAUNCH_WX_MINIPROGRAM) {
 
-                if (resp.getType() == TYPE_LOGIN) {
+            WXLaunchMiniProgram.Resp launchMiniProResp = (WXLaunchMiniProgram.Resp) resp;
+            //获取参数
+            String extraData = launchMiniProResp.extMsg;
 
-                    oauthInfo = new OauthInfo();
+            if (mShareListener != null) {
+                mShareListener.onWeiXinLogin(extraData);
+            }
+            reset();
 
-                    final String code = ((SendAuth.Resp) resp).code;
+        } else {
+            switch (resp.errCode) {
+                case BaseResp.ErrCode.ERR_OK:
 
-                    boolean isCode = CanShare.getInstance().isWinXinCode();
+                    if (resp.getType() == TYPE_LOGIN) {
 
-                    if (isCode) {
+                        oauthInfo = new OauthInfo();
 
-                        if (mShareListener != null) {
-                            mShareListener.onWeiXinLogin(code);
+                        final String code = ((SendAuth.Resp) resp).code;
+
+                        boolean isCode = CanShare.getInstance().isWinXinCode();
+
+                        if (isCode) {
+
+                            if (mShareListener != null) {
+                                mShareListener.onWeiXinLogin(code);
+                            }
+                            reset();
+
+                        } else {
+                            getWeiXinToken(code);
                         }
-                        reset();
+
 
                     } else {
-                        getWeiXinToken(code);
+
+
+                        if (mShareListener != null) {
+                            mShareListener
+                                    .onComplete(isWeixinCircle ? ShareType.WEIXIN_CIRCLE : ShareType.WEIXIN,
+                                            null);
+                        }
+                        reset();
                     }
 
 
-                } else {
+                    break;
+                case BaseResp.ErrCode.ERR_USER_CANCEL:
 
 
                     if (mShareListener != null) {
                         mShareListener
-                                .onComplete(isWeixinCircle?ShareType.WEIXIN_CIRCLE:ShareType.WEIXIN,
-                                        null);
+                                .onCancel();
                     }
                     reset();
-                }
+
+                    break;
+                case BaseResp.ErrCode.ERR_SENT_FAILED:
+
+                    if (mShareListener != null) {
+                        mShareListener
+                                .onError();
+                    }
+                    reset();
+
+                    break;
 
 
-                break;
-            case BaseResp.ErrCode.ERR_USER_CANCEL:
+            }
 
-
-                if (mShareListener != null) {
-                    mShareListener
-                            .onCancel();
-                }
-                reset();
-
-                break;
-            case BaseResp.ErrCode.ERR_SENT_FAILED:
-
-                if (mShareListener != null) {
-                    mShareListener
-                            .onError();
-                }
-                reset();
-
-                break;
         }
+
 
         finish();
     }
