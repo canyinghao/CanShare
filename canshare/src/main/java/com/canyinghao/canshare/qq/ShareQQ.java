@@ -157,7 +157,7 @@ public class ShareQQ {
 
             if (shareListener != null) {
 
-                shareListener.onQQNoInstall(mContext.getString(R.string.share_install_qq_tips));
+                shareListener.onNoInstall(ShareType.QQ,mContext.getString(R.string.share_install_qq_tips));
             }
 
             return this;

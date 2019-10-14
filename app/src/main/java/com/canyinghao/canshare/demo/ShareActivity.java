@@ -62,15 +62,11 @@ public class ShareActivity extends AppCompatActivity implements IWeiboHandler.Re
             }
 
             @Override
-            public void onQQNoInstall(String hint) {
-                super.onQQNoInstall(hint);
+            public void onNoInstall(int shareType, String hint) {
+                super.onNoInstall(shareType,hint);
                 Toast.makeText(getApplicationContext(), hint, Toast.LENGTH_SHORT).show();
             }
 
-            @Override
-            public void onWeiXinNoInstall(String hint) {
-                super.onWeiXinNoInstall(hint);
-            }
         });
     }
 

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.canyinghao.canshare.CanShare;
+import com.canyinghao.canshare.R;
 import com.canyinghao.canshare.annotation.ShareType;
 import com.canyinghao.canshare.constants.ShareConstants;
 import com.canyinghao.canshare.listener.ShareListener;
@@ -64,6 +65,7 @@ public class ShareSina {
         REDIRECT_URL = CanShare.getInstance().getWeiBoRedirectUrl();
 
         this.shareListener = shareListener;
+
 
         if (!TextUtils.isEmpty(appId)) {
             // 创建微博 SDK 接口实例
@@ -291,6 +293,17 @@ public class ShareSina {
     }
 
     public ShareSina share(ShareContent shareContent) {
+
+        if (!ShareUtil.isWeiboClientAvailable(mContext)) {
+
+            if (shareListener != null) {
+
+                shareListener.onNoInstall(ShareType.SINA,mContext.getString(R.string.share_install_weibo_tips));
+            }
+
+            return this;
+        }
+
 
         if (mSinaAPI != null) {
 

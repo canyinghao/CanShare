@@ -39,10 +39,10 @@ public class CanShare {
     private String noInstallWeiXin;
 
 
-    //   是否需要获取用户呢称等信息
+
     private boolean isNeedUserInfo;
 
-    //    微信登录时直接返回code
+
     private boolean isWinXinCode;
 
     private ShareListener shareListener;
@@ -220,7 +220,7 @@ public class CanShare {
 
                     if (shareListener != null) {
 
-                        shareListener.onQQNoInstall(context.getString(R.string.share_install_qq_tips));
+                        shareListener.onNoInstall(ShareType.QQ,context.getString(R.string.share_install_qq_tips));
                     }
 
                     return;
@@ -243,6 +243,15 @@ public class CanShare {
 
             case ShareType.SINA:
 
+                if (!ShareUtil.isWeiboClientAvailable(context)) {
+
+                    if (shareListener != null) {
+
+                        shareListener.onNoInstall(ShareType.SINA,context.getString(R.string.share_install_qq_tips));
+                    }
+
+                    return;
+                }
 
                 oauthSina = new OauthSina(context, weiBoAppId).login(shareListener, weiBoRedirectUrl);
 

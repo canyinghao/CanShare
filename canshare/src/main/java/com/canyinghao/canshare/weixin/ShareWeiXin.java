@@ -7,6 +7,7 @@ import android.text.TextUtils;
 
 import com.canyinghao.canshare.CanShare;
 import com.canyinghao.canshare.R;
+import com.canyinghao.canshare.annotation.ShareType;
 import com.canyinghao.canshare.constants.ShareConstants;
 import com.canyinghao.canshare.listener.ShareListener;
 import com.canyinghao.canshare.model.ShareContent;
@@ -83,7 +84,7 @@ public class ShareWeiXin {
             ShareListener shareListener = CanShare.getInstance().getShareListener();
 
             if (shareListener != null) {
-                shareListener.onWeiXinNoInstall(hint);
+                shareListener.onNoInstall(ShareType.WEIXIN,hint);
             }
 
         } else {

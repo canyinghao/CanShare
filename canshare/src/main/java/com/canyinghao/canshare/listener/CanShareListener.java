@@ -29,14 +29,8 @@ public class CanShareListener implements ShareListener {
 
     }
 
-
     @Override
-    public void onWeiXinNoInstall(String hint) {
-
-    }
-
-    @Override
-    public void onQQNoInstall(String hint) {
+    public void onNoInstall(int shareType, String hint) {
 
     }
 }

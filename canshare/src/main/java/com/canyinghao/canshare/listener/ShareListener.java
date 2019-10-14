@@ -3,8 +3,6 @@ package com.canyinghao.canshare.listener;
 import com.canyinghao.canshare.annotation.ShareType;
 import com.canyinghao.canshare.model.OauthInfo;
 
-import java.util.HashMap;
-
 /**
  * 分享监听
  */
@@ -33,15 +31,10 @@ public interface ShareListener {
      */
     void onWeiXinLogin(String code);
 
-    /**
-     * 微信未安装时回调
-     */
-    void onWeiXinNoInstall(String hint);
 
-    /**
-     * QQ未安装时回调
-     */
-    void onQQNoInstall(String hint);
+    void onNoInstall(@ShareType int shareType,String hint);
+
+
 
 
 }

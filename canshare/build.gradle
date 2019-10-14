@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 22
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
 
@@ -18,17 +18,28 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    api fileTree(dir: 'libs', include: ['*.jar'])
 
 
-    compile 'com.canyinghao:canokhttp:2.3.9'
-    compile 'com.sina.weibo.sdk:core:1.0.0:openDefaultRelease@aar'
-    compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:5.3.1'
+    api 'com.canyinghao:canokhttp:2.3.9'
+    api 'com.sina.weibo.sdk:core:1.0.0:openDefaultRelease@aar'
+    api 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:5.3.1'
 
 }
+
+
 
 
 buildscript {
@@ -41,5 +52,6 @@ buildscript {
         classpath "org.jfrog.buildinfo:build-info-extractor-gradle:3.1.1"
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.4.1'
     }
+
 }
 apply from: 'bintray.gradle'

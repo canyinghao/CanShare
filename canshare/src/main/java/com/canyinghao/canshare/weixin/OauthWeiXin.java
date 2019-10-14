@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import com.canyinghao.canshare.CanShare;
 import com.canyinghao.canshare.R;
+import com.canyinghao.canshare.annotation.ShareType;
 import com.canyinghao.canshare.listener.ShareListener;
 import com.tencent.mm.opensdk.modelmsg.SendAuth;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
@@ -39,7 +40,7 @@ public class OauthWeiXin {
                 ShareListener shareListener = CanShare.getInstance().getShareListener();
 
                 if (shareListener != null) {
-                    shareListener.onWeiXinNoInstall(hint);
+                    shareListener.onNoInstall(ShareType.WEIXIN,hint);
                 }
 
             } else {

@@ -182,4 +182,31 @@ public class ShareUtil {
     }
 
 
+
+    /**
+     * 判断微博是否可用
+     *
+     * @param context Context
+     * @return boolean
+     */
+    public static boolean isWeiboClientAvailable(Context context) {
+        try {
+            final PackageManager packageManager = context.getPackageManager();
+            List<PackageInfo> pinfo = packageManager.getInstalledPackages(0);
+            if (pinfo != null) {
+                for (int i = 0; i < pinfo.size(); i++) {
+                    String pn = pinfo.get(i).packageName;
+                    if (pn.equals("com.sina.weibo")) {
+                        return true;
+                    }
+                }
+            }
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+
 }
