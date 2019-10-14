@@ -247,7 +247,7 @@ public class CanShare {
 
                     if (shareListener != null) {
 
-                        shareListener.onNoInstall(ShareType.SINA,context.getString(R.string.share_install_qq_tips));
+                        shareListener.onNoInstall(ShareType.SINA,context.getString(R.string.share_install_weibo_tips));
                     }
 
                     return;

@@ -33,9 +33,9 @@ dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
 
 
-    api 'com.canyinghao:canokhttp:2.3.9'
-    api 'com.sina.weibo.sdk:core:1.0.0:openDefaultRelease@aar'
-    api 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:5.3.1'
+    implementation 'com.canyinghao:canokhttp:2.3.9'
+    implementation 'com.sina.weibo.sdk:core:1.0.0:openDefaultRelease@aar'
+    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:5.3.1'
 
 }
 
