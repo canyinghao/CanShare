@@ -10,7 +10,7 @@ import java.lang.annotation.RetentionPolicy;
  *
  * @author canyinghao
  */
-@IntDef({ShareType.QQ, ShareType.QZONE, ShareType.WEIXIN, ShareType.WEIXIN_CIRCLE, ShareType.SINA, ShareType.WEIXIN_MINI})
+@IntDef({ShareType.QQ, ShareType.QZONE, ShareType.WEIXIN, ShareType.WEIXIN_CIRCLE, ShareType.SINA, ShareType.WEIXIN_MINI, ShareType.QQ_MINI})
 @Retention(RetentionPolicy.SOURCE)
 public @interface ShareType {
     int QQ = 0;
@@ -19,6 +19,7 @@ public @interface ShareType {
     int WEIXIN_CIRCLE = 3;
     int SINA = 4;
     int WEIXIN_MINI = 5;
+    int QQ_MINI = 6;
 
 
 }

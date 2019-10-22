@@ -11,8 +11,10 @@ import com.canyinghao.canshare.constants.ShareConstants;
 import com.canyinghao.canshare.listener.ShareListener;
 import com.canyinghao.canshare.model.ShareContent;
 import com.canyinghao.canshare.utils.ShareUtil;
+import com.socks.library.KLog;
 import com.tencent.connect.share.QQShare;
 import com.tencent.connect.share.QzoneShare;
+import com.tencent.open.miniapp.MiniApp;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
@@ -47,7 +49,6 @@ public class ShareQQ {
         this.isShareToQQ = isShareToQQ;
 
 
-
         this.shareListener = shareListener;
 
         try {
@@ -63,12 +64,17 @@ public class ShareQQ {
 
         Bundle params = new Bundle();
 
-        if (shareContent.shareWay == ShareConstants.SHARE_WAY_PIC) {
+        if (shareContent.shareWay == ShareConstants.SHARE_WAY_MINI) {
+            params.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE, QzoneShare.SHARE_TO_QZONE_TYPE_MINI_PROGRAM);
+            params.putString(QQShare.SHARE_TO_QQ_MINI_PROGRAM_APPID, shareContent.getMiniProgramUserName());
+            params.putString(QQShare.SHARE_TO_QQ_MINI_PROGRAM_PATH, shareContent.getMiniProgramPath());
+            params.putString(QQShare.SHARE_TO_QQ_MINI_PROGRAM_TYPE, shareContent.getMiniProgramType());
+        } else if (shareContent.shareWay == ShareConstants.SHARE_WAY_PIC) {
             params.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE,
-                    ShareConstants.SHARE_WAY_PIC);
+                    QzoneShare.SHARE_TO_QZONE_TYPE_IMAGE);
         } else {
             params.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE,
-                    ShareConstants.SHARE_WAY_WEBPAGE);
+                    QzoneShare.SHARE_TO_QZONE_TYPE_IMAGE_TEXT);
         }
 
         params.putString(QzoneShare.SHARE_TO_QQ_TITLE, shareContent.getTitle());
@@ -90,19 +96,32 @@ public class ShareQQ {
     private void sharePageQQ(Activity activity, ShareContent shareContent) {
 
         Bundle params = new Bundle();
-        //类型
-        if(shareContent.shareWay == ShareConstants.SHARE_WAY_PIC){
-            params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE,  QQShare.SHARE_TO_QQ_TYPE_IMAGE );
 
-        }else{
-            params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE,  QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
-            //标题
-            params.putString(QQShare.SHARE_TO_QQ_TITLE, shareContent.getTitle());
-            //内容的url
-            params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, shareContent.getURL());
-            //摘要
-            params.putString(QQShare.SHARE_TO_QQ_SUMMARY, shareContent.getContent());
+
+        //类型
+        if (shareContent.shareWay == ShareConstants.SHARE_WAY_MINI) {
+            params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_MINI_PROGRAM);
+
+            params.putString(QQShare.SHARE_TO_QQ_MINI_PROGRAM_APPID, shareContent.getMiniProgramUserName());
+            params.putString(QQShare.SHARE_TO_QQ_MINI_PROGRAM_PATH, shareContent.getMiniProgramPath());
+            params.putString(QQShare.SHARE_TO_QQ_MINI_PROGRAM_TYPE, shareContent.getMiniProgramType());
+
+
+        } else if (shareContent.shareWay == ShareConstants.SHARE_WAY_PIC) {
+            params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_IMAGE);
+
+        } else {
+            params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
+
         }
+
+        //标题
+        params.putString(QQShare.SHARE_TO_QQ_TITLE, shareContent.getTitle());
+        //内容的url
+        params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, shareContent.getURL());
+        //摘要
+        params.putString(QQShare.SHARE_TO_QQ_SUMMARY, shareContent.getContent());
+
         //图片url
         String imageUrl = shareContent.getImageUrl();
         if (!TextUtils.isEmpty(imageUrl) && imageUrl.startsWith("file://")) {
@@ -157,7 +176,7 @@ public class ShareQQ {
 
             if (shareListener != null) {
 
-                shareListener.onNoInstall(ShareType.QQ,mContext.getString(R.string.share_install_qq_tips));
+                shareListener.onNoInstall(ShareType.QQ, mContext.getString(R.string.share_install_qq_tips));
             }
 
             return this;
@@ -209,6 +228,29 @@ public class ShareQQ {
         }
     };
 
+
+    public void openQQMini(ShareContent shareContent) {
+
+        int ret = MiniApp.MINIAPP_UNKNOWN_TYPE;
+        try {
+            ret = mTencent.startMiniApp(activity, shareContent.getMiniProgramUserName(), shareContent.getMiniProgramPath(),
+                    "");
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+
+        if (ret != MiniApp.MINIAPP_SUCCESS) {
+            // 互联demo针对纯输入出错的地方进行文字提示
+            if (ret == MiniApp.MINIAPP_ID_EMPTY) {
+                KLog.e("qqconnect_mini_app_id_empty");
+
+            } else if (ret == MiniApp.MINIAPP_ID_NOT_DIGIT) {
+                KLog.e("qqconnect_mini_app_id_not_digit");
+
+            }
+
+        }
+    }
 
     private void reset() {
         mTencent = null;

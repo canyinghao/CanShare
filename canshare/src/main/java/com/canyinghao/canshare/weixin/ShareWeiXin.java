@@ -23,6 +23,9 @@ import com.tencent.mm.opensdk.modelmsg.WXTextObject;
 import com.tencent.mm.opensdk.modelmsg.WXWebpageObject;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 /**
  * 微信分享
  */
@@ -40,6 +43,7 @@ public class ShareWeiXin {
     public static final int TIME_LINE = SendMessageToWX.Req.WXSceneTimeline;
 
     @IntDef(value = {FRIEND, TIME_LINE})
+    @Retention(RetentionPolicy.SOURCE)
     public @interface WeiChatShareType {
 
     }

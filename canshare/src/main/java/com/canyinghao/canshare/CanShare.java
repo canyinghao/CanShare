@@ -200,6 +200,11 @@ public class CanShare {
                 new ShareWeiXin(context, weiXinAppId).openWxMini(shareContent);
 
                 break;
+            case ShareType.QQ_MINI:
+
+                new ShareQQ(context, qqAppId, true, shareListener).openQQMini(shareContent);
+
+                break;
 
         }
 
