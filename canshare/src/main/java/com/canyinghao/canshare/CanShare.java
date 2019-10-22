@@ -16,6 +16,7 @@ import com.canyinghao.canshare.weixin.ShareWeiXin;
 import com.sina.weibo.sdk.api.share.BaseResponse;
 import com.sina.weibo.sdk.api.share.IWeiboHandler;
 import com.sina.weibo.sdk.auth.sso.SsoHandler;
+import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 
 /**
@@ -53,6 +54,8 @@ public class CanShare {
     private OauthSina oauthSina;
 
     private ShareSina shareSina;
+
+    private IUiListener iUiListener;
 
 
     public String getWeiXinAppId() {
@@ -128,6 +131,14 @@ public class CanShare {
 
         reset();
         this.shareListener = shareListener;
+    }
+
+    public void setiUiListener(IUiListener iUiListener) {
+        this.iUiListener = iUiListener;
+    }
+
+    public IUiListener getiUiListener() {
+        return iUiListener;
     }
 
     public static void initConfig(String weiXinAppId, String weiXinSecret, String qqAppId, String weiBoAppId, String weiBoRedirectUrl) {
@@ -232,7 +243,7 @@ public class CanShare {
                 }
 
                 OauthQQ oauthQQ = new OauthQQ(context, qqAppId);
-
+                iUiListener = oauthQQ.getiUiListener();
                 oauthQQ.login(shareListener);
 
                 break;

@@ -78,6 +78,58 @@ public class OauthQQ {
     }
 
 
+   private IUiListener iUiListener = new IUiListener() {
+        @Override
+        public void onComplete(Object object) {
+            JSONObject jsonObject = (JSONObject) object;
+
+            initOpenidAndToken(jsonObject);
+
+
+            boolean isNeed = CanShare.getInstance().isNeedUserInfo();
+
+
+            if (isNeed) {
+                getUserInfo();
+
+            } else {
+
+                if (shareListener != null) {
+                    shareListener.onComplete(ShareType.QQ, oauthInfo);
+                }
+
+                reset();
+
+            }
+
+
+        }
+
+        @Override
+        public void onError(UiError uiError) {
+
+
+            if (shareListener != null) {
+                shareListener.onError();
+            }
+            reset();
+        }
+
+        @Override
+        public void onCancel() {
+
+
+            if (shareListener != null) {
+                shareListener.onCancel();
+            }
+            reset();
+        }
+    };
+
+    public IUiListener getiUiListener() {
+        return iUiListener;
+    }
+
     public void login(ShareListener mShareListener) {
         if (mTencent == null) {
             if (shareListener != null) {
@@ -93,53 +145,7 @@ public class OauthQQ {
 
         this.shareListener = mShareListener;
 
-        mTencent.login(activity, "all", new IUiListener() {
-            @Override
-            public void onComplete(Object object) {
-                JSONObject jsonObject = (JSONObject) object;
-
-                initOpenidAndToken(jsonObject);
-
-
-                boolean isNeed = CanShare.getInstance().isNeedUserInfo();
-
-
-                if (isNeed) {
-                    getUserInfo();
-
-                } else {
-
-                    if (shareListener != null) {
-                        shareListener.onComplete(ShareType.QQ, oauthInfo);
-                    }
-
-                    reset();
-
-                }
-
-
-            }
-
-            @Override
-            public void onError(UiError uiError) {
-
-
-                if (shareListener != null) {
-                    shareListener.onError();
-                }
-                reset();
-            }
-
-            @Override
-            public void onCancel() {
-
-
-                if (shareListener != null) {
-                    shareListener.onCancel();
-                }
-                reset();
-            }
-        });
+        mTencent.login(activity, "all", iUiListener);
 
 
     }
@@ -215,5 +221,6 @@ public class OauthQQ {
         activity = null;
         mContext = null;
         shareListener = null;
+        CanShare.getInstance().setiUiListener(null);
     }
 }
