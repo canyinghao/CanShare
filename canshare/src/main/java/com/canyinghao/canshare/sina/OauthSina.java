@@ -2,7 +2,6 @@ package com.canyinghao.canshare.sina;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.canyinghao.canshare.CanShare;
@@ -11,9 +10,10 @@ import com.canyinghao.canshare.listener.ShareListener;
 import com.canyinghao.canshare.model.OauthInfo;
 import com.canyinghao.canshare.sina.model.User;
 import com.canyinghao.canshare.sina.model.UsersAPI;
+import com.sina.weibo.sdk.WbSdk;
 import com.sina.weibo.sdk.auth.AuthInfo;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
-import com.sina.weibo.sdk.auth.WeiboAuthListener;
+import com.sina.weibo.sdk.auth.WbConnectErrorMessage;
 import com.sina.weibo.sdk.auth.sso.SsoHandler;
 import com.sina.weibo.sdk.exception.WeiboException;
 import com.sina.weibo.sdk.net.RequestListener;
@@ -70,7 +70,8 @@ public class OauthSina {
         mShareListener = shareListener;
         AccessTokenKeeper.clear(mContext);
         AuthInfo mAuthInfo = new AuthInfo(mContext, mSinaAppKey, redirectUrl, SCOPE);
-        mSsoHandler = new SsoHandler(activity, mAuthInfo);
+        WbSdk.install(mContext,mAuthInfo);
+        mSsoHandler = new SsoHandler(activity);
         mSsoHandler.authorize(new AuthListener());
 
         return this;
@@ -82,11 +83,12 @@ public class OauthSina {
      * 该回调才会被执行。
      * 2. 非SSO 授权时，当授权结束后，该回调就会被执行
      */
-    private class AuthListener implements WeiboAuthListener {
+    private class AuthListener implements com.sina.weibo.sdk.auth.WbAuthListener {
+
 
         @Override
-        public void onComplete(Bundle values) {
-            final Oauth2AccessToken accessToken = Oauth2AccessToken.parseAccessToken(values);
+        public void onSuccess(Oauth2AccessToken accessToken) {
+
             if (accessToken != null && accessToken.isSessionValid()) {
                 AccessTokenKeeper.writeAccessToken(mContext, accessToken);
                 UsersAPI userAPI = new UsersAPI(mContext, mSinaAppKey, accessToken);
@@ -117,21 +119,20 @@ public class OauthSina {
                 }
                 reset();
             }
-
         }
 
         @Override
-        public void onWeiboException(WeiboException e) {
+        public void cancel() {
             if (mShareListener != null) {
-                mShareListener.onError();
+                mShareListener.onCancel();
             }
             reset();
         }
 
         @Override
-        public void onCancel() {
+        public void onFailure(WbConnectErrorMessage wbConnectErrorMessage) {
             if (mShareListener != null) {
-                mShareListener.onCancel();
+                mShareListener.onError();
             }
             reset();
         }

@@ -10,8 +10,7 @@ import android.widget.Toast;
 import com.canyinghao.canshare.annotation.ShareType;
 import com.canyinghao.canshare.listener.CanShareListener;
 import com.canyinghao.canshare.model.OauthInfo;
-import com.sina.weibo.sdk.api.share.BaseResponse;
-import com.sina.weibo.sdk.api.share.IWeiboHandler;
+
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -21,7 +20,7 @@ import butterknife.OnClick;
  * Created by canyinghao on 2016/12/17.
  */
 
-public class ShareActivity extends AppCompatActivity implements IWeiboHandler.Response {
+public class ShareActivity extends AppCompatActivity  {
 
     @BindView(R.id.btn_sina)
     AppCompatButton btnSina;
@@ -118,11 +117,7 @@ public class ShareActivity extends AppCompatActivity implements IWeiboHandler.Re
 
     }
 
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        shareView.onNewIntent(intent, this);
-    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -130,9 +125,5 @@ public class ShareActivity extends AppCompatActivity implements IWeiboHandler.Re
         shareView.onActivityResult(requestCode, resultCode, data);
     }
 
-    @Override
-    public void onResponse(BaseResponse baseResponse) {
 
-        shareView.onResponse(baseResponse);
-    }
 }

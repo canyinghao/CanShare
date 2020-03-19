@@ -13,8 +13,7 @@ import com.canyinghao.canshare.sina.ShareSina;
 import com.canyinghao.canshare.utils.ShareUtil;
 import com.canyinghao.canshare.weixin.OauthWeiXin;
 import com.canyinghao.canshare.weixin.ShareWeiXin;
-import com.sina.weibo.sdk.api.share.BaseResponse;
-import com.sina.weibo.sdk.api.share.IWeiboHandler;
+import com.sina.weibo.sdk.WbSdk;
 import com.sina.weibo.sdk.auth.sso.SsoHandler;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
@@ -259,7 +258,7 @@ public class CanShare {
 
             case ShareType.SINA:
 
-                if (!ShareUtil.isWeiboClientAvailable(context)) {
+                if (!WbSdk.isWbInstall(context)) {
 
                     if (shareListener != null) {
 
@@ -292,6 +291,12 @@ public class CanShare {
 
         oauthSina = null;
 
+        if(shareSina!=null){
+            shareSina.onActivityResult(requestCode,resultCode,data);
+            shareSina = null;
+        }
+
+
         if (shareType == ShareType.QQ || shareType == ShareType.QZONE) {
             Tencent.onActivityResultData(requestCode, resultCode, data, null);
         }
@@ -300,21 +305,21 @@ public class CanShare {
     }
 
 
-    public void onNewIntent(Intent intent, IWeiboHandler.Response response) {
+//    public void onNewIntent(Intent intent, IWeiboHandler.Response response) {
+//
+//        if (shareSina != null) {
+//            shareSina.onNewIntent(intent, response);
+//        }
+//        shareSina = null;
+//    }
 
-        if (shareSina != null) {
-            shareSina.onNewIntent(intent, response);
-        }
-        shareSina = null;
-    }
 
-
-    public void onResponse(BaseResponse baseResponse) {
-
-        if (shareSina != null) {
-            shareSina.onResponse(baseResponse);
-        }
-    }
+//    public void onResponse(BaseResponse baseResponse) {
+//
+//        if (shareSina != null) {
+//            shareSina.onResponse(baseResponse);
+//        }
+//    }
 
 
     public void reset() {

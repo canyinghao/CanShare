@@ -12,8 +12,7 @@ import com.canyinghao.canshare.annotation.ShareType;
 import com.canyinghao.canshare.constants.ShareConstants;
 import com.canyinghao.canshare.listener.ShareListener;
 import com.canyinghao.canshare.model.ShareContent;
-import com.sina.weibo.sdk.api.share.BaseResponse;
-import com.sina.weibo.sdk.api.share.IWeiboHandler;
+
 
 /**
  * Created by canyinghao on 2016/12/15.
@@ -106,10 +105,10 @@ public class ShareView extends View {
     }
 
 
-    public void onNewIntent(Intent intent, IWeiboHandler.Response response) {
-        CanShare.getInstance().onNewIntent(intent, response);
-
-    }
+//    public void onNewIntent(Intent intent, IWeiboHandler.Response response) {
+//        CanShare.getInstance().onNewIntent(intent, response);
+//
+//    }
 
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -117,9 +116,9 @@ public class ShareView extends View {
 
     }
 
-    public void onResponse(BaseResponse baseResponse) {
-        CanShare.getInstance().onResponse(baseResponse);
-    }
+//    public void onResponse(BaseResponse baseResponse) {
+//        CanShare.getInstance().onResponse(baseResponse);
+//    }
 
     private ShareContent shareContent;
 

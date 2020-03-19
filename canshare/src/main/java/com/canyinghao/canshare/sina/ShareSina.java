@@ -3,7 +3,6 @@ package com.canyinghao.canshare.sina;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.canyinghao.canshare.CanShare;
@@ -12,22 +11,13 @@ import com.canyinghao.canshare.annotation.ShareType;
 import com.canyinghao.canshare.constants.ShareConstants;
 import com.canyinghao.canshare.listener.ShareListener;
 import com.canyinghao.canshare.model.ShareContent;
-import com.canyinghao.canshare.utils.ShareUtil;
+import com.sina.weibo.sdk.WbSdk;
 import com.sina.weibo.sdk.api.ImageObject;
 import com.sina.weibo.sdk.api.TextObject;
 import com.sina.weibo.sdk.api.WeiboMultiMessage;
-import com.sina.weibo.sdk.api.share.BaseResponse;
-import com.sina.weibo.sdk.api.share.IWeiboHandler;
-import com.sina.weibo.sdk.api.share.IWeiboShareAPI;
-import com.sina.weibo.sdk.api.share.SendMessageToWeiboResponse;
-import com.sina.weibo.sdk.api.share.SendMultiMessageToWeiboRequest;
-import com.sina.weibo.sdk.api.share.WeiboShareSDK;
 import com.sina.weibo.sdk.auth.AuthInfo;
-import com.sina.weibo.sdk.auth.Oauth2AccessToken;
-import com.sina.weibo.sdk.auth.WeiboAuthListener;
-import com.sina.weibo.sdk.constant.WBConstants;
-import com.sina.weibo.sdk.exception.WeiboException;
-import com.tencent.mm.opensdk.modelbase.BaseResp;
+import com.sina.weibo.sdk.share.WbShareCallback;
+import com.sina.weibo.sdk.share.WbShareHandler;
 
 /**
  * 新浪分享
@@ -46,7 +36,6 @@ public class ShareSina {
     private Activity activity;
     private Context mContext;
 
-    private String appId;
 
     private ShareListener shareListener;
 
@@ -54,23 +43,32 @@ public class ShareSina {
     /**
      * 微博分享的接口实例
      */
-    private IWeiboShareAPI mSinaAPI;
-
+//    private IWeiboShareAPI mSinaAPI;
+    private WbShareHandler mSinaAPI;
 
     public ShareSina(Context context, String appId, ShareListener shareListener) {
         activity = (Activity) context;
         mContext = context.getApplicationContext();
-        this.appId = appId;
 
-        REDIRECT_URL = CanShare.getInstance().getWeiBoRedirectUrl();
+        String url = CanShare.getInstance().getWeiBoRedirectUrl();
+        if(!TextUtils.isEmpty(url)){
+            REDIRECT_URL = url;
+        }
 
         this.shareListener = shareListener;
 
 
         if (!TextUtils.isEmpty(appId)) {
             // 创建微博 SDK 接口实例
-            mSinaAPI = WeiboShareSDK.createWeiboAPI(context, appId);
+            AuthInfo mAuthInfo = new AuthInfo(mContext, appId, REDIRECT_URL, SCOPE);
+            WbSdk.install(mContext,mAuthInfo);
+            mSinaAPI = new WbShareHandler(activity);
             mSinaAPI.registerApp();
+            mSinaAPI.setProgressColor(0xff33b5e5);
+
+//            mSinaAPI = WeiboShareSDK.createWeiboAPI(context, appId);
+//            mSinaAPI.registerApp();
+
         }
     }
 
@@ -81,10 +79,10 @@ public class ShareSina {
         WeiboMultiMessage weiboMultiMessage = new WeiboMultiMessage();
         weiboMultiMessage.textObject = getTextObj(shareContent.getContent());
         //初始化从第三方到微博的消息请求
-        SendMultiMessageToWeiboRequest request = new SendMultiMessageToWeiboRequest();
-        request.transaction = ShareUtil.buildTransaction("sinatext");
-        request.multiMessage = weiboMultiMessage;
-        allInOneShare(mContext, request);
+//        SendMultiMessageToWeiboRequest request = new SendMultiMessageToWeiboRequest();
+//        request.transaction = ShareUtil.buildTransaction("sinatext");
+//        request.multiMessage = weiboMultiMessage;
+        allInOneShare(mContext, weiboMultiMessage);
 
     }
 
@@ -93,10 +91,10 @@ public class ShareSina {
         WeiboMultiMessage weiboMultiMessage = new WeiboMultiMessage();
         weiboMultiMessage.imageObject = getImageObj(shareContent);
         //初始化从第三方到微博的消息请求
-        SendMultiMessageToWeiboRequest request = new SendMultiMessageToWeiboRequest();
-        request.transaction = ShareUtil.buildTransaction("sinapic");
-        request.multiMessage = weiboMultiMessage;
-        allInOneShare(mContext, request);
+//        SendMultiMessageToWeiboRequest request = new SendMultiMessageToWeiboRequest();
+//        request.transaction = ShareUtil.buildTransaction("sinapic");
+//        request.multiMessage = weiboMultiMessage;
+        allInOneShare(mContext, weiboMultiMessage);
     }
 
     private void shareWebPage(ShareContent shareContent) {
@@ -105,11 +103,11 @@ public class ShareSina {
         weiboMultiMessage.textObject = getTextObj(shareContent.getContent());
         weiboMultiMessage.imageObject = getImageObj(shareContent);
         // 初始化从第三方到微博的消息请求
-        SendMultiMessageToWeiboRequest request = new SendMultiMessageToWeiboRequest();
+//        SendMultiMessageToWeiboRequest request = new SendMultiMessageToWeiboRequest();
         // 用transaction唯一标识一个请求
-        request.transaction = ShareUtil.buildTransaction("sinawebpage");
-        request.multiMessage = weiboMultiMessage;
-        allInOneShare(mContext, request);
+//        request.transaction = ShareUtil.buildTransaction("sinawebpage");
+//        request.multiMessage = weiboMultiMessage;
+        allInOneShare(mContext, weiboMultiMessage);
 
     }
 
@@ -195,106 +193,137 @@ public class ShareSina {
 //    }
 
 
-    private void allInOneShare(final Context context, SendMultiMessageToWeiboRequest request) {
+    private void allInOneShare(final Context context, WeiboMultiMessage weiboMessage) {
 
-        AuthInfo authInfo = new AuthInfo(context, appId, REDIRECT_URL, SCOPE);
-        Oauth2AccessToken accessToken = AccessTokenKeeper.readAccessToken(context);
-        String token = "";
-        if (accessToken != null) {
-            token = accessToken.getToken();
-        }
+        mSinaAPI.shareMessage(weiboMessage, true);
+
+//        AuthInfo authInfo = new AuthInfo(context, appId, REDIRECT_URL, SCOPE);
+//        Oauth2AccessToken accessToken = AccessTokenKeeper.readAccessToken(context);
+//        String token = "";
+//        if (accessToken != null) {
+//            token = accessToken.getToken();
+//        }
+//
+//
+//        mSinaAPI.sendRequest(activity, request, authInfo, token, new WeiboAuthListener() {
+//
+//            @Override
+//            public void onWeiboException(WeiboException arg0) {
+//
+//
+//                if (shareListener != null) {
+//                    shareListener.onError();
+//                }
+//            }
+//
+//            @Override
+//            public void onComplete(Bundle bundle) {
+//
+//
+//
+//
+//                Oauth2AccessToken newToken = Oauth2AccessToken.parseAccessToken(bundle);
+//                AccessTokenKeeper.writeAccessToken(context, newToken);
+//
+//                if (shareListener != null) {
+//                    shareListener.onComplete(ShareType.SINA, null);
+//                }
+//            }
+//
+//            @Override
+//            public void onCancel() {
+//
+//                if (shareListener != null) {
+//                    shareListener.onCancel();
+//                }
+//
+//            }
+//        });
+
+    }
 
 
-        mSinaAPI.sendRequest(activity, request, authInfo, token, new WeiboAuthListener() {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        mSinaAPI.doResultIntent(data,new WbShareCallback(){
 
             @Override
-            public void onWeiboException(WeiboException arg0) {
-
-
-                if (shareListener != null) {
-                    shareListener.onError();
-                }
-            }
-
-            @Override
-            public void onComplete(Bundle bundle) {
-
-
-
-
-                Oauth2AccessToken newToken = Oauth2AccessToken.parseAccessToken(bundle);
-                AccessTokenKeeper.writeAccessToken(context, newToken);
-
+            public void onWbShareSuccess() {
                 if (shareListener != null) {
                     shareListener.onComplete(ShareType.SINA, null);
                 }
             }
 
             @Override
-            public void onCancel() {
-
+            public void onWbShareCancel() {
                 if (shareListener != null) {
                     shareListener.onCancel();
                 }
+            }
 
+            @Override
+            public void onWbShareFail() {
+                if (shareListener != null) {
+                    shareListener.onError();
+                }
             }
         });
-
     }
 
 
-    public void onNewIntent(Intent intent, IWeiboHandler.Response response) {
 
-        handleWeiboResponse(intent, response);
+//    public void onNewIntent(Intent intent, IWeiboHandler.Response response) {
+//
+//        handleWeiboResponse(intent, response);
+//
+//        String appPackage = intent.getStringExtra("_weibo_appPackage");
+//
+//
+//        if (TextUtils.isEmpty(appPackage)) {
+//
+//            if (shareListener != null) {
+//                shareListener.onError();
+//            }
+//
+//        } else {
+//            SendMessageToWeiboResponse data = new SendMessageToWeiboResponse(intent.getExtras());
+//
+//            switch (data.errCode) {
+//                case WBConstants.ErrorCode.ERR_OK:
+//                    if (shareListener != null) {
+//                        shareListener.onComplete(ShareType.SINA, null);
+//                    }
+//                    break;
+//                case WBConstants.ErrorCode.ERR_CANCEL:
+//
+//
+//                    if (shareListener != null) {
+//
+//                        shareListener.onCancel();
+//                    }
+//                    break;
+//                case WBConstants.ErrorCode.ERR_FAIL:
+//                    if (shareListener != null) {
+//                        shareListener.onError();
+//                    }
+//                    break;
+//            }
+//        }
+//
+//        reset();
+//    }
 
-        String appPackage = intent.getStringExtra("_weibo_appPackage");
-
-
-        if (TextUtils.isEmpty(appPackage)) {
-
-            if (shareListener != null) {
-                shareListener.onError();
-            }
-
-        } else {
-            SendMessageToWeiboResponse data = new SendMessageToWeiboResponse(intent.getExtras());
-
-            switch (data.errCode) {
-                case WBConstants.ErrorCode.ERR_OK:
-                    if (shareListener != null) {
-                        shareListener.onComplete(ShareType.SINA, null);
-                    }
-                    break;
-                case WBConstants.ErrorCode.ERR_CANCEL:
-
-
-                    if (shareListener != null) {
-
-                        shareListener.onCancel();
-                    }
-                    break;
-                case WBConstants.ErrorCode.ERR_FAIL:
-                    if (shareListener != null) {
-                        shareListener.onError();
-                    }
-                    break;
-            }
-        }
-
-        reset();
-    }
-
-    public void handleWeiboResponse(Intent intent, IWeiboHandler.Response response) {
-        if (mSinaAPI != null && response != null) {
-
-            mSinaAPI.handleWeiboResponse(intent, response);
-
-        }
-    }
+//    public void handleWeiboResponse(Intent intent, IWeiboHandler.Response response) {
+//        if (mSinaAPI != null && response != null) {
+//
+//            mSinaAPI.handleWeiboResponse(intent, response);
+//
+//        }
+//    }
 
     public ShareSina share(ShareContent shareContent) {
 
-        if (!ShareUtil.isWeiboClientAvailable(mContext)) {
+        if (!WbSdk.isWbInstall(mContext)) {
 
             if (shareListener != null) {
 
@@ -325,36 +354,37 @@ public class ShareSina {
     }
 
 
-    public void onResponse(BaseResponse baseResponse) {
 
-        switch (baseResponse.errCode) {
-
-            case BaseResp.ErrCode.ERR_OK:
-                if (shareListener != null) {
-                    shareListener.onComplete(ShareType.SINA, null);
-                }
-
-                break;
-
-            case BaseResp.ErrCode.ERR_USER_CANCEL:
-                if (shareListener != null) {
-                    shareListener.onCancel();
-                }
-
-                break;
-
-
-            case BaseResp.ErrCode.ERR_SENT_FAILED:
-                if (shareListener != null) {
-                    shareListener.onError();
-                }
-
-                break;
-
-
-        }
-
-    }
+//    public void onResponse(BaseResponse baseResponse) {
+//
+//        switch (baseResponse.errCode) {
+//
+//            case BaseResp.ErrCode.ERR_OK:
+//                if (shareListener != null) {
+//                    shareListener.onComplete(ShareType.SINA, null);
+//                }
+//
+//                break;
+//
+//            case BaseResp.ErrCode.ERR_USER_CANCEL:
+//                if (shareListener != null) {
+//                    shareListener.onCancel();
+//                }
+//
+//                break;
+//
+//
+//            case BaseResp.ErrCode.ERR_SENT_FAILED:
+//                if (shareListener != null) {
+//                    shareListener.onError();
+//                }
+//
+//                break;
+//
+//
+//        }
+//
+//    }
 
 
     private void reset() {
