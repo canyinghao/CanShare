@@ -2,7 +2,6 @@ package com.canyinghao.canshare.weixin;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.support.annotation.IntDef;
 import android.text.TextUtils;
 
 import com.canyinghao.canshare.CanShare;
@@ -25,6 +24,8 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+
+import androidx.annotation.IntDef;
 
 /**
  * 微信分享

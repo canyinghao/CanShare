@@ -5,14 +5,14 @@
 
 
 
-    <android.support.v7.widget.AppCompatButton
+    <androidx.appcompat.widget.AppCompatButton
         android:text="QQ登录"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/btn_qq"/>
 
 
-    <android.support.v7.widget.AppCompatButton
+    <androidx.appcompat.widget.AppCompatButton
         android:text="微博登录"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,7 +20,7 @@
 
 
 
-    <android.support.v7.widget.AppCompatButton
+    <androidx.appcompat.widget.AppCompatButton
         android:text="微信登录"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

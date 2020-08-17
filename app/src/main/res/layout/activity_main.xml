@@ -12,14 +12,14 @@
     tools:context=".MainActivity">
 
 
-    <android.support.v7.widget.AppCompatButton
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="第三方登录" />
 
 
-    <android.support.v7.widget.AppCompatButton
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_share"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

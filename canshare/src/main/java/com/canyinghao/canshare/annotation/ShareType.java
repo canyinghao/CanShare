@@ -1,9 +1,10 @@
 package com.canyinghao.canshare.annotation;
 
-import android.support.annotation.IntDef;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+
+import androidx.annotation.IntDef;
 
 /**
  * 分享类型

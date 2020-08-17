@@ -2,8 +2,6 @@ package com.canyinghao.canshare.demo;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatButton;
 import android.view.View;
 import android.widget.Toast;
 
@@ -11,7 +9,8 @@ import com.canyinghao.canshare.annotation.ShareType;
 import com.canyinghao.canshare.listener.CanShareListener;
 import com.canyinghao.canshare.model.OauthInfo;
 
-
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -20,7 +19,7 @@ import butterknife.OnClick;
  * Created by canyinghao on 2016/12/17.
  */
 
-public class ShareActivity extends AppCompatActivity  {
+public class ShareActivity extends AppCompatActivity {
 
     @BindView(R.id.btn_sina)
     AppCompatButton btnSina;

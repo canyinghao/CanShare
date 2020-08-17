@@ -2,9 +2,6 @@ package com.canyinghao.canshare.demo;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatButton;
 import android.view.View;
 import android.widget.Toast;
 
@@ -13,6 +10,9 @@ import com.canyinghao.canshare.listener.CanShareListener;
 import com.canyinghao.canshare.model.OauthInfo;
 import com.socks.library.KLog;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
