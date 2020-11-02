@@ -52,7 +52,7 @@ public class ShareQQ {
         this.shareListener = shareListener;
 
         try {
-            mTencent = Tencent.createInstance(appId, context.getApplicationContext());
+            mTencent = Tencent.createInstance(appId, context.getApplicationContext(),context.getPackageName()+".fileprovider");
         } catch (Throwable e) {
         }
 

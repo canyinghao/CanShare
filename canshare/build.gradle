@@ -33,7 +33,7 @@ dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'com.canyinghao:canokhttp:5.0.1'
+    implementation 'com.canyinghao:canokhttp:5.0.4'
     implementation 'androidx.annotation:annotation:1.1.0'
     implementation 'com.sina.weibo.sdk:core:4.4.3:openDefaultRelease@aar'
     implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:6.6.4'
