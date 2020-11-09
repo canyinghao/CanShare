@@ -124,7 +124,12 @@ public class OauthQQ {
             }
             reset();
         }
-    };
+
+       @Override
+       public void onWarning(int i) {
+
+       }
+   };
 
     public IUiListener getiUiListener() {
         return iUiListener;
@@ -212,6 +217,11 @@ public class OauthQQ {
                 }
 
                 reset();
+            }
+
+            @Override
+            public void onWarning(int i) {
+
             }
         });
     }

@@ -1,7 +1,9 @@
 package com.canyinghao.canshare.weixin;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.text.TextUtils;
 
 import com.canyinghao.canshare.CanShare;
@@ -12,6 +14,7 @@ import com.canyinghao.canshare.listener.ShareListener;
 import com.canyinghao.canshare.model.ShareContent;
 import com.canyinghao.canshare.utils.BitmapUtil;
 import com.canyinghao.canshare.utils.ShareUtil;
+import com.socks.library.KLog;
 import com.tencent.mm.opensdk.modelbiz.WXLaunchMiniProgram;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.opensdk.modelmsg.WXImageObject;
@@ -22,10 +25,12 @@ import com.tencent.mm.opensdk.modelmsg.WXTextObject;
 import com.tencent.mm.opensdk.modelmsg.WXWebpageObject;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
+import java.io.File;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 import androidx.annotation.IntDef;
+import androidx.core.content.FileProvider;
 
 /**
  * 微信分享
@@ -61,11 +66,13 @@ public class ShareWeiXin {
 //    }
 
     private String mWeChatAppId;
+    private Context context;
 
 
     public ShareWeiXin(Context context, String appId) {
 
         mWeChatAppId = appId;
+        this.context = context;
         if (!TextUtils.isEmpty(mWeChatAppId)) {
             initWeixinShare(context);
         }
@@ -75,7 +82,6 @@ public class ShareWeiXin {
 
     private void initWeixinShare(Context context) {
         WeiXinHandlerActivity.mIWXAPI = WXAPIFactory.createWXAPI(context.getApplicationContext(), mWeChatAppId, true);
-
 
 
         if (!WeiXinHandlerActivity.mIWXAPI.isWXAppInstalled()) {
@@ -89,7 +95,7 @@ public class ShareWeiXin {
             ShareListener shareListener = CanShare.getInstance().getShareListener();
 
             if (shareListener != null) {
-                shareListener.onNoInstall(ShareType.WEIXIN,hint);
+                shareListener.onNoInstall(ShareType.WEIXIN, hint);
             }
 
         } else {
@@ -165,9 +171,9 @@ public class ShareWeiXin {
     }
 
 
-    public void shareMini(int shareType, ShareContent shareContent){
+    public void shareMini(int shareType, ShareContent shareContent) {
         WXMiniProgramObject miniProgramObj = new WXMiniProgramObject();
-        miniProgramObj.webpageUrl =shareContent.getURL(); // 兼容低版本的网页链接
+        miniProgramObj.webpageUrl = shareContent.getURL(); // 兼容低版本的网页链接
         miniProgramObj.miniprogramType = WXMiniProgramObject.MINIPTOGRAM_TYPE_RELEASE;// 正式版:0，测试版:1，体验版:2
         miniProgramObj.userName = shareContent.getMiniProgramUserName();     // 小程序原始id
         miniProgramObj.path = shareContent.getMiniProgramPath();            //小程序页面路径
@@ -184,7 +190,7 @@ public class ShareWeiXin {
 
     }
 
-    public void openWxMini(ShareContent shareContent){
+    public void openWxMini(ShareContent shareContent) {
 
         WXLaunchMiniProgram.Req req = new WXLaunchMiniProgram.Req();
         req.userName = shareContent.miniProgramUserName; // 填小程序原始id
@@ -217,40 +223,73 @@ public class ShareWeiXin {
 
     private void sendShare(ShareContent shareContent, final SendMessageToWX.Req req) {
 
-        Bitmap bitmap = shareContent.getShareImageBitmap();
+        try {
+            Bitmap bitmap = shareContent.getShareImageBitmap();
 
-        if (bitmap != null) {
-            if (req.message.mediaObject instanceof WXImageObject) {
-                WXImageObject imageObject=  null;
+            if (bitmap != null) {
+                if (req.message.mediaObject instanceof WXImageObject) {
+                    WXImageObject imageObject = null;
 
-                String imageUrl = shareContent.getImageUrl();
-                if(!TextUtils.isEmpty(imageUrl)&&imageUrl.startsWith("file://")){
-                    imageObject= new WXImageObject();
-                    imageObject.imagePath = imageUrl.replace("file://","");
-                }else{
-                    imageObject=  new WXImageObject(bitmap);
+                    String imageUrl = shareContent.getImageUrl();
+                    if (!TextUtils.isEmpty(imageUrl) && imageUrl.startsWith("file://")) {
+                        imageObject = new WXImageObject();
+                        imageObject.imagePath = imageUrl.replace("file://", "");
+                        if(shareContent.isUserProvider){
+                            if (checkVersionValid(context) && checkAndroidNotBelowN()) {
+                                File file = new File(imageObject.imagePath);
+                                imageObject.imagePath = getFileUri(context, file);
+                                KLog.i("shareToWeixin:"+imageObject.imagePath);
+                            }
+                        }
+
+                    } else {
+                        imageObject = new WXImageObject(bitmap);
+                    }
+                    req.message.mediaObject = imageObject;
                 }
-                req.message.mediaObject =imageObject;
-            }
-//            if(shareContent.getShareWay()==ShareConstants.SHARE_WAY_MINI){
-//                req.message.thumbData = ShareUtil.bmpToByteArray(BitmapUtil.scaleCenterCrop(bitmap, THUMB_MINI_SIZE, THUMB_MINI_SIZE));
-//            }else{
-//                req.message.thumbData = ShareUtil.bmpToByteArray(BitmapUtil.scaleCenterCrop(bitmap, THUMB_SIZE, THUMB_SIZE));
-//            }
-//
-           if(shareContent.getShareWay()==ShareConstants.SHARE_WAY_MINI){
-                bitmap =  BitmapUtil.scaleCenterCrop(bitmap);
-                req.message.thumbData = ShareUtil.getCompressBitmap(bitmap,128);
 
-            }else{
-                req.message.thumbData = ShareUtil.getCompressBitmap(bitmap,32);
-            }
+                if (shareContent.getShareWay() == ShareConstants.SHARE_WAY_MINI) {
+                    bitmap = BitmapUtil.scaleCenterCrop(bitmap);
+                    req.message.thumbData = ShareUtil.getCompressBitmap(bitmap, 128);
 
+                } else {
+                    req.message.thumbData = ShareUtil.getCompressBitmap(bitmap, 32);
+                }
+
+            }
+            // 就算图片没有了 尽量能发出分享
+            WeiXinHandlerActivity.isWeixinCircle = req.scene == TIME_LINE;
+            WeiXinHandlerActivity.mIWXAPI.sendReq(req);
+        } catch (Throwable e) {
+            e.printStackTrace();
         }
-        // 就算图片没有了 尽量能发出分享
-        WeiXinHandlerActivity.isWeixinCircle = req.scene==TIME_LINE;
-        WeiXinHandlerActivity.mIWXAPI.sendReq(req);
     }
 
+
+    // 判断微信版本是否为7.0.13及以上
+    public boolean checkVersionValid(Context context) {
+        return WeiXinHandlerActivity.mIWXAPI.getWXAppSupportAPI() >= 0x27000D00;
+    }
+
+    // 判断Android版本是否7.0及以上
+    public boolean checkAndroidNotBelowN() {
+        return android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N;
+    }
+
+    public String getFileUri(Context context, File file) {
+        if (file == null || !file.exists()) {
+            return null;
+        }
+
+        Uri contentUri = FileProvider.getUriForFile(context,
+                context.getPackageName() + ".fileprovider",  // 要与`AndroidManifest.xml`里配置的`authorities`一致，假设你的应用包名为com.example.app
+                file);
+
+        // 授权给微信访问路径
+        context.grantUriPermission("com.tencent.mm",  // 这里填微信包名
+                contentUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+        return contentUri.toString();   // contentUri.toString() 即是以"content://"开头的用于共享的路径
+    }
 
 }

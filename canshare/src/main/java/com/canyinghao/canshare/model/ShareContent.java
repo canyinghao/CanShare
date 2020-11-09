@@ -26,6 +26,7 @@ public class ShareContent {
     public String miniProgramUserName="";
     public String miniProgramPath="";
     public String miniProgramType="";
+    public boolean isUserProvider;
 
     public int shareWay  = ShareConstants.SHARE_WAY_WEBPAGE;
 
@@ -126,5 +127,13 @@ public class ShareContent {
 
     public void setMiniProgramType(String miniProgramType) {
         this.miniProgramType = miniProgramType;
+    }
+
+    public boolean isUserProvider() {
+        return isUserProvider;
+    }
+
+    public void setUserProvider(boolean userProvider) {
+        isUserProvider = userProvider;
     }
 }

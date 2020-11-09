@@ -208,6 +208,11 @@ public class ShareQQ {
         }
 
         @Override
+        public void onWarning(int i) {
+
+        }
+
+        @Override
         public void onComplete(Object response) {
 
             if (shareListener != null) {
