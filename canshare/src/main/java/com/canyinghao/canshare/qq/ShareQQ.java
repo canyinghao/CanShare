@@ -5,12 +5,10 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
 
-import com.canyinghao.canshare.R;
 import com.canyinghao.canshare.annotation.ShareType;
 import com.canyinghao.canshare.constants.ShareConstants;
 import com.canyinghao.canshare.listener.ShareListener;
 import com.canyinghao.canshare.model.ShareContent;
-import com.canyinghao.canshare.utils.ShareUtil;
 import com.socks.library.KLog;
 import com.tencent.connect.share.QQShare;
 import com.tencent.connect.share.QzoneShare;
@@ -172,15 +170,15 @@ public class ShareQQ {
     public ShareQQ share(ShareContent shareContent) {
 
 
-        if (!ShareUtil.isQQClientAvailable(mContext)) {
-
-            if (shareListener != null) {
-
-                shareListener.onNoInstall(ShareType.QQ, mContext.getString(R.string.share_install_qq_tips));
-            }
-
-            return this;
-        }
+//        if (!ShareUtil.isQQClientAvailable(mContext)) {
+//
+//            if (shareListener != null) {
+//
+//                shareListener.onNoInstall(ShareType.QQ, mContext.getString(R.string.share_install_qq_tips));
+//            }
+//
+//            return this;
+//        }
 
         if (isShareToQQ) {
 

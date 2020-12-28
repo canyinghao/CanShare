@@ -10,7 +10,6 @@ import com.canyinghao.canshare.qq.OauthQQ;
 import com.canyinghao.canshare.qq.ShareQQ;
 import com.canyinghao.canshare.sina.OauthSina;
 import com.canyinghao.canshare.sina.ShareSina;
-import com.canyinghao.canshare.utils.ShareUtil;
 import com.canyinghao.canshare.weixin.OauthWeiXin;
 import com.canyinghao.canshare.weixin.ShareWeiXin;
 import com.sina.weibo.sdk.WbSdk;
@@ -231,15 +230,15 @@ public class CanShare {
 
             case ShareType.QQ:
 
-                if (!ShareUtil.isQQClientAvailable(context)) {
-
-                    if (shareListener != null) {
-
-                        shareListener.onNoInstall(ShareType.QQ,context.getString(R.string.share_install_qq_tips));
-                    }
-
-                    return;
-                }
+//                if (!ShareUtil.isQQClientAvailable(context)) {
+//
+//                    if (shareListener != null) {
+//
+//                        shareListener.onNoInstall(ShareType.QQ,context.getString(R.string.share_install_qq_tips));
+//                    }
+//
+//                    return;
+//                }
 
                 OauthQQ oauthQQ = new OauthQQ(context, qqAppId);
                 iUiListener = oauthQQ.getiUiListener();
