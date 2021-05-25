@@ -30,9 +30,9 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.jakewharton:butterknife:10.2.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.1'
-    implementation 'com.canyinghao:canokhttp:5.0.1'
-    implementation 'com.sina.weibo.sdk:core:4.4.3:openDefaultRelease@aar'
-    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:6.6.4'
+    implementation 'com.canyinghao:canokhttp:5.0.9'
+    implementation 'com.sina.weibo.sdk:core:4.4.4:openDefaultRelease@aar'
+    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:6.6.5'
 
     testImplementation 'junit:junit:4.12'
     implementation project(':canshare')
