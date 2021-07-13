@@ -6,7 +6,7 @@
  
 ## 添加依赖
 ```
-compile 'com.canyinghao:canshare:1.1.7'
+compile 'com.github.canyinghao:CanShare:5.0.6'
 ```
  
 ## 使用方式 
