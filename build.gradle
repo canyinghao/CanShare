@@ -3,6 +3,8 @@
 buildscript {
     repositories {
         google()
+        mavenCentral()
+        maven { url 'https://maven.google.com' }
         jcenter()
     }
     dependencies {
@@ -20,7 +22,10 @@ buildscript {
 allprojects {
     repositories {
         google()
+        mavenCentral()
+        maven { url 'https://maven.google.com' }
         jcenter()
+        maven { url 'https://jitpack.io' }
         maven { url "https://dl.bintray.com/thelasterstar/maven/" }
     }
     tasks.withType(Javadoc) {

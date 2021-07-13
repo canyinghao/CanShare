@@ -39,7 +39,7 @@ dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'com.canyinghao:canokhttp:5.0.9'
+    implementation 'com.github.canyinghao:CanOkHttp:5.1.1'
     implementation 'androidx.annotation:annotation:1.1.0'
 //    implementation 'com.sina.weibo.sdk:core:4.4.4:openDefaultRelease@aar'
     api(name: 'core-4.4.4-openDefaultRelease', ext: 'aar')
