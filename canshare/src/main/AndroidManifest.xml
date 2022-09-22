@@ -16,8 +16,9 @@
 
         <activity
             android:name="com.tencent.tauth.AuthActivity"
-            android:launchMode="singleTask"
             android:configChanges="orientation|keyboard|keyboardHidden|screenSize"
+            android:exported="true"
+            android:launchMode="singleTask"
             android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -38,9 +39,10 @@
         <activity
             android:name="com.sina.weibo.sdk.share.WbShareResultActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
+            android:exported="true"
             android:launchMode="singleTop"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            tools:replace="configChanges" >
+            tools:replace="configChanges">
             <intent-filter>
                 <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
 
@@ -57,15 +59,13 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:launchMode="singleTop"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            tools:replace="configChanges" >
-        </activity>
+            tools:replace="configChanges" />
         <activity
             android:name="com.sina.weibo.sdk.share.WbShareToStoryActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:launchMode="singleTask"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            tools:replace="configChanges" >
-        </activity>
+            tools:replace="configChanges" />
 
     </application>
 
