@@ -278,7 +278,7 @@ public class CanShare {
 
             case ShareType.SINA:
 
-                if (WBAPIFactory.createWBAPI(context).isWBAppInstalled()) {
+                if (!WBAPIFactory.createWBAPI(context).isWBAppInstalled()) {
 
                     if (shareListener != null) {
 
