@@ -2,21 +2,23 @@ package com.canyinghao.canshare.sina;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
 
 import com.canyinghao.canshare.CanShare;
 import com.canyinghao.canshare.annotation.ShareType;
 import com.canyinghao.canshare.listener.ShareListener;
 import com.canyinghao.canshare.model.OauthInfo;
-import com.canyinghao.canshare.sina.model.User;
-import com.canyinghao.canshare.sina.model.UsersAPI;
-import com.sina.weibo.sdk.WbSdk;
+
+
 import com.sina.weibo.sdk.auth.AuthInfo;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
-import com.sina.weibo.sdk.auth.WbConnectErrorMessage;
-import com.sina.weibo.sdk.auth.sso.SsoHandler;
-import com.sina.weibo.sdk.exception.WeiboException;
-import com.sina.weibo.sdk.net.RequestListener;
+import com.sina.weibo.sdk.auth.WbAuthListener;
+
+import com.sina.weibo.sdk.common.UiError;
+import com.sina.weibo.sdk.openapi.IWBAPI;
+
+import com.sina.weibo.sdk.openapi.WBAPIFactory;
 
 /**
  * 新浪登录
@@ -24,166 +26,96 @@ import com.sina.weibo.sdk.net.RequestListener;
 public class OauthSina {
 
 
-    private String redirectUrl = "http://sns.whalecloud.com/sina2/callback";
 
-    private static final String SCOPE =
-            "friendships_groups_read,friendships_groups_write,statuses_to_me_read,"
-                    + "follow_app_official_microblog";
 
     private Activity activity;
-    private Context mContext;
-
-    private String mSinaAppKey;
 
 
     private ShareListener mShareListener;
 
 
-    private OauthInfo oauthInfo;
+    private final OauthInfo oauthInfo;
 
     /**
      * 注意：SsoHandler 仅当 SDK 支持 SSO 时有效
      */
-    private SsoHandler mSsoHandler;
-
+    private final IWBAPI mWBAPI;
 
     public OauthSina(Context context, String appId) {
         activity = (Activity) context;
-        mContext = context.getApplicationContext();
-
-        mSinaAppKey = appId;
 
         oauthInfo = new OauthInfo();
 
-    }
+        mWBAPI = WBAPIFactory.createWBAPI(context);
 
 
-    public SsoHandler getSsoHandler() {
-        return mSsoHandler;
     }
+
 
     public OauthSina login(ShareListener shareListener, String url) {
 
-        if (!TextUtils.isEmpty(url)) {
-            redirectUrl = url;
-        }
         mShareListener = shareListener;
-        AccessTokenKeeper.clear(mContext);
-        AuthInfo mAuthInfo = new AuthInfo(mContext, mSinaAppKey, redirectUrl, SCOPE);
-        WbSdk.install(mContext,mAuthInfo);
-        mSsoHandler = new SsoHandler(activity);
-        mSsoHandler.authorize(new AuthListener());
 
-        return this;
+        mWBAPI.authorize(activity, new WbAuthListener() {
+            @Override
+            public void onComplete(Oauth2AccessToken accessToken) {
+                if (accessToken != null && accessToken.isSessionValid()) {
 
-    }
+                    oauthInfo.accesstoken = accessToken.getAccessToken();
 
-    /**
-     * * 1. SSO 授权时，需要在 onActivityResult 中调用 {@link SsoHandler#authorizeCallBack} 后，
-     * 该回调才会被执行。
-     * 2. 非SSO 授权时，当授权结束后，该回调就会被执行
-     */
-    private class AuthListener implements com.sina.weibo.sdk.auth.WbAuthListener {
+                    oauthInfo.refreshtoken = accessToken.getRefreshToken();
+
+                    oauthInfo.unionid = accessToken.getUid();
 
 
-        @Override
-        public void onSuccess(Oauth2AccessToken accessToken) {
-
-            if (accessToken != null && accessToken.isSessionValid()) {
-                AccessTokenKeeper.writeAccessToken(mContext, accessToken);
-                UsersAPI userAPI = new UsersAPI(mContext, mSinaAppKey, accessToken);
-
-                oauthInfo.accesstoken = accessToken.getToken();
-
-                oauthInfo.refreshtoken = accessToken.getRefreshToken();
-
-                oauthInfo.unionid = accessToken.getUid();
-
-                boolean isNeed = CanShare.getInstance().isNeedUserInfo();
-
-                if (isNeed) {
-
-                    userAPI.show(Long.parseLong(accessToken.getUid()), mListener);
-
-                } else {
                     if (mShareListener != null) {
                         mShareListener.onComplete(ShareType.SINA, oauthInfo);
                     }
                     reset();
+
+
+                } else {
+
+                    if (mShareListener != null) {
+                        mShareListener.onError();
+                    }
+                    reset();
                 }
+            }
 
-            } else {
-
+            @Override
+            public void onError(UiError error) {
                 if (mShareListener != null) {
                     mShareListener.onError();
                 }
                 reset();
             }
-        }
 
-        @Override
-        public void cancel() {
-            if (mShareListener != null) {
-                mShareListener.onCancel();
-            }
-            reset();
-        }
-
-        @Override
-        public void onFailure(WbConnectErrorMessage wbConnectErrorMessage) {
-            if (mShareListener != null) {
-                mShareListener.onError();
-            }
-            reset();
-        }
-    }
-
-    private RequestListener mListener = new RequestListener() {
-        @Override
-        public void onComplete(String response) {
-
-            boolean isSuccess = false;
-            if (!TextUtils.isEmpty(response)) {
-
-                // 调用 User#parse 将JSON串解析成User对象
-                User user = User.parse(response);
-                if (user != null) {
-
-                    oauthInfo.nickname = user.name;
-                    oauthInfo.sex = user.gender;
-                    oauthInfo.headimgurl = user.avatar_large;
-
-                    isSuccess = true;
-                    if (mShareListener != null) {
-                        mShareListener.onComplete(ShareType.SINA, oauthInfo);
-                    }
-                }
-            }
-
-            if (!isSuccess) {
+            @Override
+            public void onCancel() {
                 if (mShareListener != null) {
-                    mShareListener.onError();
+                    mShareListener.onCancel();
                 }
-
+                reset();
             }
-            reset();
-        }
+        });
 
-        @Override
-        public void onWeiboException(WeiboException e) {
-            if (mShareListener != null) {
-                mShareListener.onError();
-            }
-            reset();
-        }
-    };
+        return this;
+
+    }
 
 
     private void reset() {
         activity = null;
-        mContext = null;
-        mSsoHandler =null;
+
         mShareListener = null;
+    }
+
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (mWBAPI.isAuthorizeResult(requestCode, resultCode, data)) {
+            mWBAPI.authorizeCallback(activity, requestCode, resultCode, data);
+        }
     }
 
 }

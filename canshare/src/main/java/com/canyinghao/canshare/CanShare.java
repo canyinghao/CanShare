@@ -2,6 +2,7 @@ package com.canyinghao.canshare;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 
 import com.canyinghao.canshare.annotation.ShareType;
 import com.canyinghao.canshare.listener.ShareListener;
@@ -12,8 +13,10 @@ import com.canyinghao.canshare.sina.OauthSina;
 import com.canyinghao.canshare.sina.ShareSina;
 import com.canyinghao.canshare.weixin.OauthWeiXin;
 import com.canyinghao.canshare.weixin.ShareWeiXin;
-import com.sina.weibo.sdk.WbSdk;
-import com.sina.weibo.sdk.auth.sso.SsoHandler;
+import com.sina.weibo.sdk.auth.AuthInfo;
+import com.sina.weibo.sdk.openapi.IWBAPI;
+import com.sina.weibo.sdk.openapi.SdkListener;
+import com.sina.weibo.sdk.openapi.WBAPIFactory;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 
@@ -26,6 +29,9 @@ public class CanShare {
 
     private static CanShare mInstance;
 
+    private static final String SCOPE =
+            "friendships_groups_read,friendships_groups_write,statuses_to_me_read,"
+                    + "follow_app_official_microblog";
 
     private String weiXinAppId;
     private String weiXinSecret;
@@ -139,7 +145,7 @@ public class CanShare {
         return iUiListener;
     }
 
-    public static void initConfig(String weiXinAppId, String weiXinSecret, String qqAppId, String weiBoAppId, String weiBoRedirectUrl) {
+    public static void initConfig(Context context,String weiXinAppId, String weiXinSecret, String qqAppId, String weiBoAppId, String weiBoRedirectUrl) {
 
 
         mInstance = getInstance();
@@ -150,6 +156,21 @@ public class CanShare {
         mInstance.setWeiBoAppId(weiBoAppId);
         mInstance.setWeiBoRedirectUrl(weiBoRedirectUrl);
 
+        String redirectUrl = "http://sns.whalecloud.com/sina2/callback";
+        if(!TextUtils.isEmpty(weiBoRedirectUrl)){
+            redirectUrl = weiBoRedirectUrl;
+        }
+        WBAPIFactory.createWBAPI(context).registerApp(context, new AuthInfo(context, weiBoAppId, redirectUrl, SCOPE), new SdkListener() {
+            @Override
+            public void onInitSuccess() {
+
+            }
+
+            @Override
+            public void onInitFailure(Exception e) {
+
+            }
+        });
 
     }
 
@@ -257,7 +278,7 @@ public class CanShare {
 
             case ShareType.SINA:
 
-                if (!WbSdk.isWbInstall(context)) {
+                if (WBAPIFactory.createWBAPI(context).isWBAppInstalled()) {
 
                     if (shareListener != null) {
 
@@ -280,15 +301,9 @@ public class CanShare {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (oauthSina != null) {
-            SsoHandler mSsoHandler = oauthSina.getSsoHandler();
-            // SSO 授权回调
-            // 重要：发起 SSO 登陆的 Activity 必须重写 onActivityResult
-            if (mSsoHandler != null) {
-                mSsoHandler.authorizeCallBack(requestCode, resultCode, data);
-            }
+            oauthSina.onActivityResult(requestCode, resultCode, data);
+            oauthSina = null;
         }
-
-        oauthSina = null;
 
         if(shareSina!=null){
             shareSina.onActivityResult(requestCode,resultCode,data);

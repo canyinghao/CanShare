@@ -2,9 +2,16 @@
 
 buildscript {
     repositories {
-        google()
+        // 阿里云的 central仓和jcenter仓的聚合仓
+        maven { url 'https://maven.aliyun.com/repository/public' }
+        // 阿里云的 google仓
+        maven { url 'https://maven.aliyun.com/repository/google' }
+        // 国外central仓
         mavenCentral()
-        maven { url 'https://maven.google.com' }
+        // 谷歌仓
+        google()
+        // github的jitpack仓
+        maven { url "https://jitpack.io" }
         jcenter()
     }
     dependencies {
@@ -21,11 +28,17 @@ buildscript {
 
 allprojects {
     repositories {
-        google()
+        // 阿里云的 central仓和jcenter仓的聚合仓
+        maven { url 'https://maven.aliyun.com/repository/public' }
+        // 阿里云的 google仓
+        maven { url 'https://maven.aliyun.com/repository/google' }
+        // 国外central仓
         mavenCentral()
-        maven { url 'https://maven.google.com' }
+        // 谷歌仓
+        google()
+        // github的jitpack仓
+        maven { url "https://jitpack.io" }
         jcenter()
-        maven { url 'https://jitpack.io' }
         maven { url "https://dl.bintray.com/thelasterstar/maven/" }
     }
     tasks.withType(Javadoc) {

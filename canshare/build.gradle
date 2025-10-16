@@ -42,7 +42,7 @@ repositories {
 }
 
 dependencies {
-    api fileTree(dir: 'libs', include: ['*.jar'])
+    api fileTree(dir: 'libs', include: ['*.aar'])
 
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.github.canyinghao:CanOkHttp:5.1.1'
@@ -51,6 +51,7 @@ dependencies {
 //    api(name: 'core-4.4.4-openDefaultRelease', ext: 'aar')
     implementation 'com.tencent.tauth:qqopensdk:3.51.2'
     implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:6.6.5'
+
 
 }
 
