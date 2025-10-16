@@ -51,7 +51,7 @@ dependencies {
 //    api(name: 'core-4.4.4-openDefaultRelease', ext: 'aar')
     implementation 'com.tencent.tauth:qqopensdk:3.51.2'
     implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:6.6.5'
-
+    implementation "io.github.sinaweibosdk:core:13.10.5@aar"
 
 }
 
